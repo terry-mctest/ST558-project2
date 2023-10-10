@@ -601,30 +601,267 @@ padding-top: 0px;
 
 <body>
 
-<h1 id="untitled">Untitled</h1>
+<h1 id="st558-fall-2023-project-2">ST558 Fall 2023, Project 2</h1>
 <p>Terry McTest 2023-10-11</p>
-<h2 id="r-markdown">R Markdown</h2>
-<p>This is an R Markdown document. Markdown is a simple formatting
-syntax for authoring HTML, PDF, and MS Word documents. For more details
-on using R Markdown see <a href="http://rmarkdown.rstudio.com">http://rmarkdown.rstudio.com</a>.</p>
-<p>When you click the <strong>Knit</strong> button a document will be
-generated that includes both content as well as the output of any
-embedded R code chunks within the document. You can embed an R code
-chunk like this:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">summary</span>(cars)</span></code></pre></div>
-<pre><code>##      speed           dist       
-##  Min.   : 4.0   Min.   :  2.00  
-##  1st Qu.:12.0   1st Qu.: 26.00  
-##  Median :15.0   Median : 36.00  
-##  Mean   :15.4   Mean   : 42.98  
-##  3rd Qu.:19.0   3rd Qu.: 56.00  
-##  Max.   :25.0   Max.   :120.00</code></pre>
-<h2 id="including-plots">Including Plots</h2>
-<p>You can also embed plots, for example:</p>
-<p><img src="data:image/png;base64,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" /><!-- --></p>
-<p>Note that the <code>echo = FALSE</code> parameter was added to the
-code chunk to prevent printing of the R code that generated the
-plot.</p>
+<br>
+
+<p>This vignette focuses on a custom function that was developed to
+contact a particular API (Application Programming Interface) to query,
+parse, and return well-structured data. After using said function to
+obtain data, an exploratory data analysis will be performed. <br></p>
+<h1 id="the-official-carbon-intensity-api-for-great-britain">The
+Official Carbon Intensity API for Great Britain</h1>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(httr)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="fu">library</span>(jsonlite)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>carbon <span class="ot">&lt;-</span> <span class="cf">function</span>(from_dt, to_dt, <span class="at">want_int=</span><span class="dv">0</span>, <span class="at">want_gen=</span><span class="dv">0</span>, <span class="at">want_reg_wide=</span><span class="dv">0</span>, <span class="at">want_reg_long=</span><span class="dv">0</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>{</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>  </span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#national-level data: carbon intensity</span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="cf">if</span>(want_int<span class="sc">==</span><span class="dv">1</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>{</span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>base <span class="ot">=</span> <span class="st">&quot;https://api.carbonintensity.org.uk/intensity/&quot;</span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>slash <span class="ot">=</span> <span class="st">&quot;/&quot;</span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a>int_url <span class="ot">=</span> <span class="fu">paste0</span>(base, from_dt, slash, to_dt)</span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a>int_api <span class="ot">&lt;-</span> <span class="fu">GET</span>(int_url)</span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a>parsed_int <span class="ot">&lt;-</span> <span class="fu">fromJSON</span>(<span class="fu">rawToChar</span>(int_api<span class="sc">$</span>content))</span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="co">#str(parsed_int$data)</span></span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="co">#as_tibble(parsed_int$data)</span></span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a>int <span class="ot">&lt;-</span></span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a>  parsed_int<span class="sc">$</span>data <span class="sc">%&gt;%</span></span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a>  <span class="fu">unnest</span>(intensity)</span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a>}</span>
+<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a></span>
+<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a>  </span>
+<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a></span>
+<span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a><span class="co">#national-level data: generation mix</span></span>
+<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a></span>
+<span id="cb2-28"><a href="#cb2-28" tabindex="-1"></a><span class="cf">if</span>(want_gen<span class="sc">==</span><span class="dv">1</span>)</span>
+<span id="cb2-29"><a href="#cb2-29" tabindex="-1"></a>{</span>
+<span id="cb2-30"><a href="#cb2-30" tabindex="-1"></a>base <span class="ot">=</span> <span class="st">&quot;https://api.carbonintensity.org.uk/generation/&quot;</span></span>
+<span id="cb2-31"><a href="#cb2-31" tabindex="-1"></a>slash <span class="ot">=</span> <span class="st">&quot;/&quot;</span></span>
+<span id="cb2-32"><a href="#cb2-32" tabindex="-1"></a>gen_url <span class="ot">=</span> <span class="fu">paste0</span>(base, from_dt, slash, to_dt)</span>
+<span id="cb2-33"><a href="#cb2-33" tabindex="-1"></a>  </span>
+<span id="cb2-34"><a href="#cb2-34" tabindex="-1"></a>gen_api <span class="ot">&lt;-</span> <span class="fu">GET</span>(gen_url)</span>
+<span id="cb2-35"><a href="#cb2-35" tabindex="-1"></a>parsed_gen <span class="ot">&lt;-</span> <span class="fu">fromJSON</span>(<span class="fu">rawToChar</span>(gen_api<span class="sc">$</span>content))</span>
+<span id="cb2-36"><a href="#cb2-36" tabindex="-1"></a><span class="co">#str(parsed_gen$data)</span></span>
+<span id="cb2-37"><a href="#cb2-37" tabindex="-1"></a><span class="fu">as_tibble</span>(parsed_gen<span class="sc">$</span>data)</span>
+<span id="cb2-38"><a href="#cb2-38" tabindex="-1"></a></span>
+<span id="cb2-39"><a href="#cb2-39" tabindex="-1"></a>gen <span class="ot">&lt;-</span></span>
+<span id="cb2-40"><a href="#cb2-40" tabindex="-1"></a>  parsed_gen<span class="sc">$</span>data <span class="sc">%&gt;%</span></span>
+<span id="cb2-41"><a href="#cb2-41" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb2-42"><a href="#cb2-42" tabindex="-1"></a>  <span class="fu">unnest</span>(generationmix) <span class="sc">%&gt;%</span></span>
+<span id="cb2-43"><a href="#cb2-43" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> fuel, <span class="at">values_from =</span> perc)</span>
+<span id="cb2-44"><a href="#cb2-44" tabindex="-1"></a>}</span>
+<span id="cb2-45"><a href="#cb2-45" tabindex="-1"></a></span>
+<span id="cb2-46"><a href="#cb2-46" tabindex="-1"></a></span>
+<span id="cb2-47"><a href="#cb2-47" tabindex="-1"></a>  </span>
+<span id="cb2-48"><a href="#cb2-48" tabindex="-1"></a><span class="co">#regional-level data</span></span>
+<span id="cb2-49"><a href="#cb2-49" tabindex="-1"></a>  </span>
+<span id="cb2-50"><a href="#cb2-50" tabindex="-1"></a><span class="cf">if</span>(want_reg_wide<span class="sc">==</span><span class="dv">1</span> <span class="sc">|</span> want_reg_long<span class="sc">==</span><span class="dv">1</span>)</span>
+<span id="cb2-51"><a href="#cb2-51" tabindex="-1"></a>{</span>
+<span id="cb2-52"><a href="#cb2-52" tabindex="-1"></a>base <span class="ot">=</span> <span class="st">&quot;https://api.carbonintensity.org.uk/regional/intensity/&quot;</span></span>
+<span id="cb2-53"><a href="#cb2-53" tabindex="-1"></a>slash <span class="ot">=</span> <span class="st">&quot;/&quot;</span></span>
+<span id="cb2-54"><a href="#cb2-54" tabindex="-1"></a>reg_url <span class="ot">=</span> <span class="fu">paste0</span>(base, from_dt, slash, to_dt)</span>
+<span id="cb2-55"><a href="#cb2-55" tabindex="-1"></a>  </span>
+<span id="cb2-56"><a href="#cb2-56" tabindex="-1"></a>regional_api <span class="ot">&lt;-</span> <span class="fu">GET</span>(reg_url)</span>
+<span id="cb2-57"><a href="#cb2-57" tabindex="-1"></a>parsed_regional <span class="ot">&lt;-</span> <span class="fu">fromJSON</span>(<span class="fu">rawToChar</span>(regional_api<span class="sc">$</span>content))</span>
+<span id="cb2-58"><a href="#cb2-58" tabindex="-1"></a><span class="co">#str(parsed_regional$data)</span></span>
+<span id="cb2-59"><a href="#cb2-59" tabindex="-1"></a><span class="co">#as_tibble(parsed_regional$data)</span></span>
+<span id="cb2-60"><a href="#cb2-60" tabindex="-1"></a>  </span>
+<span id="cb2-61"><a href="#cb2-61" tabindex="-1"></a>reg_long <span class="ot">&lt;-</span></span>
+<span id="cb2-62"><a href="#cb2-62" tabindex="-1"></a>  parsed_regional<span class="sc">$</span>data <span class="sc">%&gt;%</span></span>
+<span id="cb2-63"><a href="#cb2-63" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb2-64"><a href="#cb2-64" tabindex="-1"></a>  <span class="fu">unnest</span>(regions) <span class="sc">%&gt;%</span></span>
+<span id="cb2-65"><a href="#cb2-65" tabindex="-1"></a>  <span class="fu">unnest</span>(intensity) <span class="sc">%&gt;%</span></span>
+<span id="cb2-66"><a href="#cb2-66" tabindex="-1"></a>  <span class="fu">unnest</span>(generationmix) <span class="sc">%&gt;%</span></span>
+<span id="cb2-67"><a href="#cb2-67" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> fuel, <span class="at">values_from =</span> perc)</span>
+<span id="cb2-68"><a href="#cb2-68" tabindex="-1"></a>}</span>
+<span id="cb2-69"><a href="#cb2-69" tabindex="-1"></a>  </span>
+<span id="cb2-70"><a href="#cb2-70" tabindex="-1"></a><span class="cf">if</span>(want_reg_wide<span class="sc">==</span><span class="dv">1</span>)</span>
+<span id="cb2-71"><a href="#cb2-71" tabindex="-1"></a>{</span>
+<span id="cb2-72"><a href="#cb2-72" tabindex="-1"></a>reg_wide <span class="ot">&lt;-</span></span>
+<span id="cb2-73"><a href="#cb2-73" tabindex="-1"></a> reg_long <span class="sc">%&gt;%</span></span>
+<span id="cb2-74"><a href="#cb2-74" tabindex="-1"></a>  <span class="fu">select</span>(from, to, regionid, forecast, index, biomass, coal, imports, gas, nuclear, other, hydro, solar, wind) <span class="sc">%&gt;%</span></span>
+<span id="cb2-75"><a href="#cb2-75" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> regionid, </span>
+<span id="cb2-76"><a href="#cb2-76" tabindex="-1"></a>    <span class="at">values_from =</span> <span class="fu">c</span>(forecast, index, biomass, coal, imports, gas, nuclear, other, hydro, solar, wind))</span>
+<span id="cb2-77"><a href="#cb2-77" tabindex="-1"></a>}</span>
+<span id="cb2-78"><a href="#cb2-78" tabindex="-1"></a>  </span>
+<span id="cb2-79"><a href="#cb2-79" tabindex="-1"></a>  </span>
+<span id="cb2-80"><a href="#cb2-80" tabindex="-1"></a></span>
+<span id="cb2-81"><a href="#cb2-81" tabindex="-1"></a><span class="co">#compile the *wide* dataset for outputting</span></span>
+<span id="cb2-82"><a href="#cb2-82" tabindex="-1"></a>  </span>
+<span id="cb2-83"><a href="#cb2-83" tabindex="-1"></a><span class="cf">if</span>(want_int<span class="sc">==</span><span class="dv">1</span> <span class="sc">&amp;</span> want_gen<span class="sc">==</span><span class="dv">1</span> <span class="sc">&amp;</span> want_reg_wide<span class="sc">==</span><span class="dv">1</span>)</span>
+<span id="cb2-84"><a href="#cb2-84" tabindex="-1"></a>  {carbon_wide <span class="ot">&lt;-</span> <span class="fu">full_join</span>(int, gen, <span class="at">by=</span><span class="fu">c</span>(<span class="st">&quot;to&quot;</span><span class="ot">=</span><span class="st">&quot;to&quot;</span>, <span class="st">&quot;from&quot;</span><span class="ot">=</span><span class="st">&quot;from&quot;</span>))</span>
+<span id="cb2-85"><a href="#cb2-85" tabindex="-1"></a>   carbon_wide <span class="ot">&lt;-</span> <span class="fu">full_join</span>(carbon_wide, reg_wide, <span class="at">by=</span><span class="fu">c</span>(<span class="st">&quot;to&quot;</span><span class="ot">=</span><span class="st">&quot;to&quot;</span>, <span class="st">&quot;from&quot;</span><span class="ot">=</span><span class="st">&quot;from&quot;</span>))}</span>
+<span id="cb2-86"><a href="#cb2-86" tabindex="-1"></a>  </span>
+<span id="cb2-87"><a href="#cb2-87" tabindex="-1"></a><span class="cf">else</span> <span class="cf">if</span>(want_int<span class="sc">==</span><span class="dv">1</span> <span class="sc">&amp;</span> want_gen<span class="sc">==</span><span class="dv">1</span>)</span>
+<span id="cb2-88"><a href="#cb2-88" tabindex="-1"></a>  {carbon_wide <span class="ot">&lt;-</span> <span class="fu">full_join</span>(int, gen, <span class="at">by=</span><span class="fu">c</span>(<span class="st">&quot;to&quot;</span><span class="ot">=</span><span class="st">&quot;to&quot;</span>, <span class="st">&quot;from&quot;</span><span class="ot">=</span><span class="st">&quot;from&quot;</span>))}</span>
+<span id="cb2-89"><a href="#cb2-89" tabindex="-1"></a></span>
+<span id="cb2-90"><a href="#cb2-90" tabindex="-1"></a><span class="cf">else</span> <span class="cf">if</span>(want_int<span class="sc">==</span><span class="dv">1</span> <span class="sc">&amp;</span> want_reg_wide<span class="sc">==</span><span class="dv">1</span>)</span>
+<span id="cb2-91"><a href="#cb2-91" tabindex="-1"></a>  {carbon_wide <span class="ot">&lt;-</span> <span class="fu">full_join</span>(int, reg_wide, <span class="at">by=</span><span class="fu">c</span>(<span class="st">&quot;to&quot;</span><span class="ot">=</span><span class="st">&quot;to&quot;</span>, <span class="st">&quot;from&quot;</span><span class="ot">=</span><span class="st">&quot;from&quot;</span>))}</span>
+<span id="cb2-92"><a href="#cb2-92" tabindex="-1"></a>  </span>
+<span id="cb2-93"><a href="#cb2-93" tabindex="-1"></a><span class="cf">else</span> <span class="cf">if</span>(want_gen<span class="sc">==</span><span class="dv">1</span> <span class="sc">&amp;</span> want_reg_wide<span class="sc">==</span><span class="dv">1</span>)</span>
+<span id="cb2-94"><a href="#cb2-94" tabindex="-1"></a>  {carbon_wide <span class="ot">&lt;-</span> <span class="fu">full_join</span>(gen, reg_wide, <span class="at">by=</span><span class="fu">c</span>(<span class="st">&quot;to&quot;</span><span class="ot">=</span><span class="st">&quot;to&quot;</span>, <span class="st">&quot;from&quot;</span><span class="ot">=</span><span class="st">&quot;from&quot;</span>))}</span>
+<span id="cb2-95"><a href="#cb2-95" tabindex="-1"></a></span>
+<span id="cb2-96"><a href="#cb2-96" tabindex="-1"></a><span class="cf">else</span> <span class="cf">if</span>(want_int<span class="sc">==</span><span class="dv">1</span>)</span>
+<span id="cb2-97"><a href="#cb2-97" tabindex="-1"></a>  {carbon_wide <span class="ot">&lt;-</span> int}</span>
+<span id="cb2-98"><a href="#cb2-98" tabindex="-1"></a>  </span>
+<span id="cb2-99"><a href="#cb2-99" tabindex="-1"></a><span class="cf">else</span> <span class="cf">if</span>(want_gen<span class="sc">==</span><span class="dv">1</span>)</span>
+<span id="cb2-100"><a href="#cb2-100" tabindex="-1"></a>  {carbon_wide <span class="ot">&lt;-</span> gen}</span>
+<span id="cb2-101"><a href="#cb2-101" tabindex="-1"></a></span>
+<span id="cb2-102"><a href="#cb2-102" tabindex="-1"></a><span class="cf">else</span> <span class="cf">if</span>(want_reg_wide<span class="sc">==</span><span class="dv">1</span>)</span>
+<span id="cb2-103"><a href="#cb2-103" tabindex="-1"></a>  {carbon_wide <span class="ot">&lt;-</span> reg_wide}</span>
+<span id="cb2-104"><a href="#cb2-104" tabindex="-1"></a></span>
+<span id="cb2-105"><a href="#cb2-105" tabindex="-1"></a></span>
+<span id="cb2-106"><a href="#cb2-106" tabindex="-1"></a>  </span>
+<span id="cb2-107"><a href="#cb2-107" tabindex="-1"></a></span>
+<span id="cb2-108"><a href="#cb2-108" tabindex="-1"></a><span class="co">#to facilitate downstream analyses, derive a few more-usable date/season vars</span></span>
+<span id="cb2-109"><a href="#cb2-109" tabindex="-1"></a>  </span>
+<span id="cb2-110"><a href="#cb2-110" tabindex="-1"></a>carbon_wide<span class="sc">$</span>yyyy <span class="ot">=</span> <span class="fu">substring</span>(carbon_wide<span class="sc">$</span>from, <span class="at">first=</span><span class="dv">1</span>, <span class="at">last=</span><span class="dv">4</span>)</span>
+<span id="cb2-111"><a href="#cb2-111" tabindex="-1"></a>carbon_wide<span class="sc">$</span>mm <span class="ot">=</span> <span class="fu">substring</span>(carbon_wide<span class="sc">$</span>from, <span class="at">first=</span><span class="dv">6</span>, <span class="at">last=</span><span class="dv">7</span>)</span>
+<span id="cb2-112"><a href="#cb2-112" tabindex="-1"></a>carbon_wide<span class="sc">$</span>yyyymm <span class="ot">=</span> <span class="fu">paste0</span>(carbon_wide<span class="sc">$</span>yyyy, carbon_wide<span class="sc">$</span>mm)</span>
+<span id="cb2-113"><a href="#cb2-113" tabindex="-1"></a></span>
+<span id="cb2-114"><a href="#cb2-114" tabindex="-1"></a>carbon_wide<span class="sc">$</span>season <span class="ot">=</span></span>
+<span id="cb2-115"><a href="#cb2-115" tabindex="-1"></a>  <span class="fu">if_else</span>(carbon_wide<span class="sc">$</span>mm <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;04&quot;</span>, <span class="st">&quot;05&quot;</span>, <span class="st">&quot;06&quot;</span>), <span class="st">&quot;spring&quot;</span>,</span>
+<span id="cb2-116"><a href="#cb2-116" tabindex="-1"></a>  <span class="fu">if_else</span>(carbon_wide<span class="sc">$</span>mm <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;07&quot;</span>, <span class="st">&quot;08&quot;</span>, <span class="st">&quot;09&quot;</span>), <span class="st">&quot;summer&quot;</span>,</span>
+<span id="cb2-117"><a href="#cb2-117" tabindex="-1"></a>  <span class="fu">if_else</span>(carbon_wide<span class="sc">$</span>mm <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;10&quot;</span>, <span class="st">&quot;11&quot;</span>, <span class="st">&quot;12&quot;</span>), <span class="st">&quot;fall&quot;</span>,</span>
+<span id="cb2-118"><a href="#cb2-118" tabindex="-1"></a>  <span class="fu">if_else</span>(carbon_wide<span class="sc">$</span>mm <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;01&quot;</span>, <span class="st">&quot;02&quot;</span>, <span class="st">&quot;03&quot;</span>), <span class="st">&quot;winter&quot;</span>, <span class="cn">NA</span>))))</span>
+<span id="cb2-119"><a href="#cb2-119" tabindex="-1"></a></span>
+<span id="cb2-120"><a href="#cb2-120" tabindex="-1"></a>reg_long<span class="sc">$</span>yyyy <span class="ot">=</span> <span class="fu">substring</span>(reg_long<span class="sc">$</span>from, <span class="at">first=</span><span class="dv">1</span>, <span class="at">last=</span><span class="dv">4</span>)</span>
+<span id="cb2-121"><a href="#cb2-121" tabindex="-1"></a>reg_long<span class="sc">$</span>mm <span class="ot">=</span> <span class="fu">substring</span>(reg_long<span class="sc">$</span>from, <span class="at">first=</span><span class="dv">6</span>, <span class="at">last=</span><span class="dv">7</span>)</span>
+<span id="cb2-122"><a href="#cb2-122" tabindex="-1"></a>reg_long<span class="sc">$</span>yyyymm <span class="ot">=</span> <span class="fu">paste0</span>(reg_long<span class="sc">$</span>yyyy, reg_long<span class="sc">$</span>mm)</span>
+<span id="cb2-123"><a href="#cb2-123" tabindex="-1"></a></span>
+<span id="cb2-124"><a href="#cb2-124" tabindex="-1"></a>reg_long<span class="sc">$</span>season <span class="ot">=</span></span>
+<span id="cb2-125"><a href="#cb2-125" tabindex="-1"></a>  <span class="fu">if_else</span>(reg_long<span class="sc">$</span>mm <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;04&quot;</span>, <span class="st">&quot;05&quot;</span>, <span class="st">&quot;06&quot;</span>), <span class="st">&quot;spring&quot;</span>,</span>
+<span id="cb2-126"><a href="#cb2-126" tabindex="-1"></a>  <span class="fu">if_else</span>(reg_long<span class="sc">$</span>mm <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;07&quot;</span>, <span class="st">&quot;08&quot;</span>, <span class="st">&quot;09&quot;</span>), <span class="st">&quot;summer&quot;</span>,</span>
+<span id="cb2-127"><a href="#cb2-127" tabindex="-1"></a>  <span class="fu">if_else</span>(reg_long<span class="sc">$</span>mm <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;10&quot;</span>, <span class="st">&quot;11&quot;</span>, <span class="st">&quot;12&quot;</span>), <span class="st">&quot;fall&quot;</span>,</span>
+<span id="cb2-128"><a href="#cb2-128" tabindex="-1"></a>  <span class="fu">if_else</span>(reg_long<span class="sc">$</span>mm <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;01&quot;</span>, <span class="st">&quot;02&quot;</span>, <span class="st">&quot;03&quot;</span>), <span class="st">&quot;winter&quot;</span>, <span class="cn">NA</span>))))</span>
+<span id="cb2-129"><a href="#cb2-129" tabindex="-1"></a></span>
+<span id="cb2-130"><a href="#cb2-130" tabindex="-1"></a></span>
+<span id="cb2-131"><a href="#cb2-131" tabindex="-1"></a>  </span>
+<span id="cb2-132"><a href="#cb2-132" tabindex="-1"></a>    </span>
+<span id="cb2-133"><a href="#cb2-133" tabindex="-1"></a><span class="co">#final output, which is either:</span></span>
+<span id="cb2-134"><a href="#cb2-134" tabindex="-1"></a><span class="co">#(1) a list comprised of one long dataset + one wide dataset, (2) a single wide dataset, or (3) a single long dataset</span></span>
+<span id="cb2-135"><a href="#cb2-135" tabindex="-1"></a><span class="co"># (the long dataset will always be regional data)</span></span>
+<span id="cb2-136"><a href="#cb2-136" tabindex="-1"></a>  </span>
+<span id="cb2-137"><a href="#cb2-137" tabindex="-1"></a><span class="cf">if</span>(want_reg_long<span class="sc">==</span><span class="dv">1</span> <span class="sc">&amp;</span> (want_int<span class="sc">==</span><span class="dv">1</span> <span class="sc">|</span> want_gen<span class="sc">==</span><span class="dv">1</span> <span class="sc">|</span> want_reg_wide<span class="sc">==</span><span class="dv">1</span>))</span>
+<span id="cb2-138"><a href="#cb2-138" tabindex="-1"></a>  {carbon_dat <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">reg_long=</span>reg_long, <span class="at">carbon_wide=</span>carbon_wide)}</span>
+<span id="cb2-139"><a href="#cb2-139" tabindex="-1"></a>  </span>
+<span id="cb2-140"><a href="#cb2-140" tabindex="-1"></a><span class="cf">else</span> <span class="cf">if</span>(want_int<span class="sc">==</span><span class="dv">1</span> <span class="sc">|</span> want_gen<span class="sc">==</span><span class="dv">1</span> <span class="sc">|</span> want_reg_wide<span class="sc">==</span><span class="dv">1</span>)</span>
+<span id="cb2-141"><a href="#cb2-141" tabindex="-1"></a>  {carbon_dat <span class="ot">&lt;-</span> carbon_wide}</span>
+<span id="cb2-142"><a href="#cb2-142" tabindex="-1"></a></span>
+<span id="cb2-143"><a href="#cb2-143" tabindex="-1"></a><span class="cf">else</span> <span class="cf">if</span>(want_reg_long<span class="sc">==</span><span class="dv">1</span>)</span>
+<span id="cb2-144"><a href="#cb2-144" tabindex="-1"></a>  {carbon_dat <span class="ot">&lt;-</span> reg_long}</span>
+<span id="cb2-145"><a href="#cb2-145" tabindex="-1"></a>  </span>
+<span id="cb2-146"><a href="#cb2-146" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>jan2019 <span class="ot">&lt;-</span> <span class="fu">carbon</span>(<span class="at">from_dt=</span><span class="st">&quot;2019-01-10T12:00Z&quot;</span>, <span class="at">to_dt=</span><span class="st">&quot;2019-01-20T12:00Z&quot;</span>, <span class="at">want_int=</span><span class="dv">1</span>, <span class="at">want_gen=</span><span class="dv">1</span>, <span class="at">want_reg_wide=</span><span class="dv">1</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>feb2019 <span class="ot">&lt;-</span> <span class="fu">carbon</span>(<span class="at">from_dt=</span><span class="st">&quot;2019-02-10T12:00Z&quot;</span>, <span class="at">to_dt=</span><span class="st">&quot;2019-02-20T12:00Z&quot;</span>, <span class="at">want_int=</span><span class="dv">1</span>, <span class="at">want_gen=</span><span class="dv">1</span>, <span class="at">want_reg_wide=</span><span class="dv">1</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>mar2019 <span class="ot">&lt;-</span> <span class="fu">carbon</span>(<span class="at">from_dt=</span><span class="st">&quot;2019-03-10T12:00Z&quot;</span>, <span class="at">to_dt=</span><span class="st">&quot;2019-03-20T12:00Z&quot;</span>, <span class="at">want_int=</span><span class="dv">1</span>, <span class="at">want_gen=</span><span class="dv">1</span>, <span class="at">want_reg_wide=</span><span class="dv">1</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>apr2019 <span class="ot">&lt;-</span> <span class="fu">carbon</span>(<span class="at">from_dt=</span><span class="st">&quot;2019-04-10T12:00Z&quot;</span>, <span class="at">to_dt=</span><span class="st">&quot;2019-04-20T12:00Z&quot;</span>, <span class="at">want_int=</span><span class="dv">1</span>, <span class="at">want_gen=</span><span class="dv">1</span>, <span class="at">want_reg_wide=</span><span class="dv">1</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>may2019 <span class="ot">&lt;-</span> <span class="fu">carbon</span>(<span class="at">from_dt=</span><span class="st">&quot;2019-05-10T12:00Z&quot;</span>, <span class="at">to_dt=</span><span class="st">&quot;2019-05-20T12:00Z&quot;</span>, <span class="at">want_int=</span><span class="dv">1</span>, <span class="at">want_gen=</span><span class="dv">1</span>, <span class="at">want_reg_wide=</span><span class="dv">1</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a>jun2019 <span class="ot">&lt;-</span> <span class="fu">carbon</span>(<span class="at">from_dt=</span><span class="st">&quot;2019-06-10T12:00Z&quot;</span>, <span class="at">to_dt=</span><span class="st">&quot;2019-06-20T12:00Z&quot;</span>, <span class="at">want_int=</span><span class="dv">1</span>, <span class="at">want_gen=</span><span class="dv">1</span>, <span class="at">want_reg_wide=</span><span class="dv">1</span>)</span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a>jul2019 <span class="ot">&lt;-</span> <span class="fu">carbon</span>(<span class="at">from_dt=</span><span class="st">&quot;2019-07-10T12:00Z&quot;</span>, <span class="at">to_dt=</span><span class="st">&quot;2019-07-20T12:00Z&quot;</span>, <span class="at">want_int=</span><span class="dv">1</span>, <span class="at">want_gen=</span><span class="dv">1</span>, <span class="at">want_reg_wide=</span><span class="dv">1</span>)</span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a>aug2019 <span class="ot">&lt;-</span> <span class="fu">carbon</span>(<span class="at">from_dt=</span><span class="st">&quot;2019-08-10T12:00Z&quot;</span>, <span class="at">to_dt=</span><span class="st">&quot;2019-08-20T12:00Z&quot;</span>, <span class="at">want_int=</span><span class="dv">1</span>, <span class="at">want_gen=</span><span class="dv">1</span>, <span class="at">want_reg_wide=</span><span class="dv">1</span>)</span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a>sep2019 <span class="ot">&lt;-</span> <span class="fu">carbon</span>(<span class="at">from_dt=</span><span class="st">&quot;2019-09-10T12:00Z&quot;</span>, <span class="at">to_dt=</span><span class="st">&quot;2019-09-20T12:00Z&quot;</span>, <span class="at">want_int=</span><span class="dv">1</span>, <span class="at">want_gen=</span><span class="dv">1</span>, <span class="at">want_reg_wide=</span><span class="dv">1</span>)</span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a>oct2019 <span class="ot">&lt;-</span> <span class="fu">carbon</span>(<span class="at">from_dt=</span><span class="st">&quot;2019-10-10T12:00Z&quot;</span>, <span class="at">to_dt=</span><span class="st">&quot;2019-10-20T12:00Z&quot;</span>, <span class="at">want_int=</span><span class="dv">1</span>, <span class="at">want_gen=</span><span class="dv">1</span>, <span class="at">want_reg_wide=</span><span class="dv">1</span>)</span>
+<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a></span>
+<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a>nov2019 <span class="ot">&lt;-</span> <span class="fu">carbon</span>(<span class="at">from_dt=</span><span class="st">&quot;2019-11-10T12:00Z&quot;</span>, <span class="at">to_dt=</span><span class="st">&quot;2019-11-20T12:00Z&quot;</span>, <span class="at">want_int=</span><span class="dv">1</span>, <span class="at">want_gen=</span><span class="dv">1</span>, <span class="at">want_reg_wide=</span><span class="dv">1</span>)</span>
+<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a>dec2019 <span class="ot">&lt;-</span> <span class="fu">carbon</span>(<span class="at">from_dt=</span><span class="st">&quot;2019-12-10T12:00Z&quot;</span>, <span class="at">to_dt=</span><span class="st">&quot;2019-12-20T12:00Z&quot;</span>, <span class="at">want_int=</span><span class="dv">1</span>, <span class="at">want_gen=</span><span class="dv">1</span>, <span class="at">want_reg_wide=</span><span class="dv">1</span>)</span>
+<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a></span>
+<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a></span>
+<span id="cb3-26"><a href="#cb3-26" tabindex="-1"></a>year2019 <span class="ot">&lt;-</span></span>
+<span id="cb3-27"><a href="#cb3-27" tabindex="-1"></a>  <span class="fu">bind_rows</span>(jan2019, feb2019, mar2019, apr2019, may2019, jun2019, jul2019, aug2019, sep2019, oct2019, nov2019, dec2019)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">mean</span>(year2019<span class="sc">$</span>forecast_1)</span></code></pre></div>
+<pre><code>## [1] 100.0561</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">mean</span>(year2019<span class="sc">$</span>forecast_2)</span></code></pre></div>
+<pre><code>## [1] 33.27374</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">mean</span>(year2019<span class="sc">$</span>forecast_3)</span></code></pre></div>
+<pre><code>## [1] 63.7694</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">mean</span>(year2019<span class="sc">$</span>forecast_4)</span></code></pre></div>
+<pre><code>## [1] 45.05839</code></pre>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">mean</span>(year2019<span class="sc">$</span>forecast_5)</span></code></pre></div>
+<pre><code>## [1] 268.4652</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">mean</span>(year2019<span class="sc">$</span>forecast_6)</span></code></pre></div>
+<pre><code>## [1] 236.8051</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="fu">mean</span>(year2019<span class="sc">$</span>forecast_7)</span></code></pre></div>
+<pre><code>## [1] 338.9783</code></pre>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="fu">mean</span>(year2019<span class="sc">$</span>forecast_8)</span></code></pre></div>
+<pre><code>## [1] 180.9532</code></pre>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="fu">mean</span>(year2019<span class="sc">$</span>forecast_9)</span></code></pre></div>
+<pre><code>## [1] 363.0371</code></pre>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="fu">mean</span>(year2019<span class="sc">$</span>forecast_10)</span></code></pre></div>
+<pre><code>## [1] 149.5137</code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="fu">mean</span>(year2019<span class="sc">$</span>forecast_11)</span></code></pre></div>
+<pre><code>## [1] 129.6942</code></pre>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a><span class="fu">mean</span>(year2019<span class="sc">$</span>forecast_12)</span></code></pre></div>
+<pre><code>## [1] 258.442</code></pre>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a><span class="fu">mean</span>(year2019<span class="sc">$</span>forecast_13)</span></code></pre></div>
+<pre><code>## [1] 216.3463</code></pre>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" tabindex="-1"></a><span class="fu">mean</span>(year2019<span class="sc">$</span>forecast_14)</span></code></pre></div>
+<pre><code>## [1] 236.7277</code></pre>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" tabindex="-1"></a><span class="fu">mean</span>(year2019<span class="sc">$</span>forecast_15)</span></code></pre></div>
+<pre><code>## [1] 202.9335</code></pre>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" tabindex="-1"></a><span class="fu">mean</span>(year2019<span class="sc">$</span>forecast_16)</span></code></pre></div>
+<pre><code>## [1] 59.69196</code></pre>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" tabindex="-1"></a><span class="fu">mean</span>(year2019<span class="sc">$</span>forecast_17)</span></code></pre></div>
+<pre><code>## [1] 279.7741</code></pre>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" tabindex="-1"></a><span class="fu">mean</span>(year2019<span class="sc">$</span>forecast_18)</span></code></pre></div>
+<pre><code>## [1] 214.0347</code></pre>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" tabindex="-1"></a>year2019 <span class="ot">&lt;-</span></span>
+<span id="cb40-2"><a href="#cb40-2" tabindex="-1"></a>  year2019 <span class="sc">%&gt;%</span></span>
+<span id="cb40-3"><a href="#cb40-3" tabindex="-1"></a>  <span class="fu">group_by</span>(index) <span class="sc">%&gt;%</span></span>
+<span id="cb40-4"><a href="#cb40-4" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mean_actual =</span> <span class="fu">mean</span>(actual, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb40-5"><a href="#cb40-5" tabindex="-1"></a></span>
+<span id="cb40-6"><a href="#cb40-6" tabindex="-1"></a><span class="co">#year2019$yyyy = substring(year2019$from, first=1, last=4)</span></span>
+<span id="cb40-7"><a href="#cb40-7" tabindex="-1"></a><span class="co">#year2019$mm = substring(year2019$from, first=6, last=7)</span></span>
+<span id="cb40-8"><a href="#cb40-8" tabindex="-1"></a><span class="co">#year2019$yyyymm = paste0(year2019$yyyy, year2019$mm)</span></span>
+<span id="cb40-9"><a href="#cb40-9" tabindex="-1"></a></span>
+<span id="cb40-10"><a href="#cb40-10" tabindex="-1"></a>year2019 <span class="sc">%&gt;%</span></span>
+<span id="cb40-11"><a href="#cb40-11" tabindex="-1"></a>  <span class="fu">group_by</span>(yyyymm) <span class="sc">%&gt;%</span></span>
+<span id="cb40-12"><a href="#cb40-12" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">mean</span>(actual, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code></pre></div>
+<pre><code>## # A tibble: 12 × 2
+##    yyyymm `mean(actual, na.rm = TRUE)`
+##    &lt;chr&gt;                         &lt;dbl&gt;
+##  1 201901                         257.
+##  2 201902                         196.
+##  3 201903                         182.
+##  4 201904                         213.
+##  5 201905                         223.
+##  6 201906                         219.
+##  7 201907                         231.
+##  8 201908                         178.
+##  9 201909                         196.
+## 10 201910                         207.
+## 11 201911                         264.
+## 12 201912                         218.</code></pre>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" tabindex="-1"></a>tb <span class="ot">&lt;-</span> <span class="fu">table</span>(year2019<span class="sc">$</span>index)</span>
+<span id="cb42-2"><a href="#cb42-2" tabindex="-1"></a><span class="fu">prop.table</span>(tb)</span></code></pre></div>
+<pre><code>## 
+##        high         low    moderate   very high 
+## 0.205994456 0.207726958 0.578135828 0.008142758</code></pre>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" tabindex="-1"></a><span class="co">#scatterplot: forecast x actual (by year?)</span></span>
+<span id="cb44-2"><a href="#cb44-2" tabindex="-1"></a><span class="co">#line chart: *actual* over time (for national)</span></span>
+<span id="cb44-3"><a href="#cb44-3" tabindex="-1"></a><span class="co">#line chart: *psuedo-actual* over time (for regions)</span></span>
+<span id="cb44-4"><a href="#cb44-4" tabindex="-1"></a><span class="co">#stacked bar: generation mix (by time, and/or by region?)</span></span>
+<span id="cb44-5"><a href="#cb44-5" tabindex="-1"></a><span class="co">#ggradar? generation mix (by time, and/or by region?)</span></span>
+<span id="cb44-6"><a href="#cb44-6" tabindex="-1"></a><span class="co">#cowplot?  actual by season? (for national)</span></span></code></pre></div>
 
 </body>
 </html>
