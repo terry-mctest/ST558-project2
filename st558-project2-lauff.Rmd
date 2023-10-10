@@ -1,13 +1,10 @@
 ---
 title: "Untitled"
-author: "e"
-date: "2023-10-08"
+author: "Terry McTest"
+date: "2023-10-11"
 output: github_document
 ---
 
-```{r}
-#rmarkdown::render("st558-project2-lauff.Rmd", output_file = "README.md")
-```
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)

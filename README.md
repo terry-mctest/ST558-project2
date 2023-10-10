@@ -1,11 +1,7 @@
 Untitled
 ================
-e
-2023-10-08
-
-``` r
-#rmarkdown::render("st558-project2-lauff.Rmd", output_file = "README.md")
-```
+Terry McTest
+2023-10-11
 
 ## R Markdown
 
