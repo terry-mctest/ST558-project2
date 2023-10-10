@@ -6,15 +6,24 @@ output: github_document
 ---
 <br>
 
-```{r setup, include=FALSE}
-#knitr::opts_chunk$set(echo = TRUE)
-```
 This vignette focuses on a custom function that was developed to contact a particular API (Application Programming Interface) to query, parse, and return well-structured data.  After using said function to obtain data, an exploratory data analysis will be performed.
 <br>
 
 # The Official Carbon Intensity API for Great Britain
 
+The Carbon Intensity API provides information regarding regional carbon intensity of the electricity system in Great Britain.  Since carbon intensity varies by hour, day, and season (due changes in demand as well as changes in means of generating electricity), these data are stored at the micro-level, e.g. individual carbon intensity readings for each half-hour period over a number of years. Per the [National Grid’s Carbon Intensity API website] (https://carbon-intensity.github.io/api-definitions/?shell#carbon-intensity-api-v2-0-0):
 
+>National Grid’s Carbon Intensity API provides an indicative trend of regional carbon intensity of the electricity system in Great Britain (GB) up to 2 days ahead of real-time. It provides programmatic and timely access to both forecast and estimated carbon intensity data. The Carbon Intensity forecast includes CO2 emissions related to electricity generation only. The includes emissions from all large metered power stations, interconnector imports, transmission and distribution losses, and accounts for national electricity demand, embedded wind and solar generation.
+
+The API consists of four primary endpoints:
+
+* National-level carbon intensity
+* National-level electricity-generation mix
+* National statistics
+* Regional-level carbon intensity & electricity-generation mix
+<br>
+
+# Function for Returning Data From the API
 
 ```{r, message=FALSE}
 library(httr)
