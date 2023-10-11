@@ -60,6 +60,8 @@ library(dplyr)
 library(tidyr)
 library(jsonlite)
 library(tidyverse)
+library(ggradar)
+library(scales)
 ```
 
 <br>
@@ -117,11 +119,11 @@ Notably, each of these 15 options/combinations could be used in
 conjunction with an infinite number of time windows, providing the user
 with an even greater number of options for each data request.
 
-The `carbon` function also converts the bookend timestamps (which are
-actually textstrings in “YYYY-MM-DDTHH:MMZ” format as required to access
-the CI API) to simple quasi-date numeric values (e.g. YYYYMM) to
-facilitate the forthcoming exploratory data analysis (though a proper
-date value may be required for more rigorous analyses).
+As seen below, the `carbon` function also performs some niceties such as
+imposing order on categorical variables, and converting the bookend
+timestamps (which are actually character textstrings in
+“YYYY-MM-DDTHH:MMZ” format as required to access the CI API) to various
+date values to facilitate the forthcoming exploratory data analysis.
 
 The code chunk to follow shows R syntax for the entire `carbon`
 function, annotated with comments to describe the purpose of each
@@ -242,6 +244,7 @@ if(want_int==1 | want_gen==1 | want_reg_wide==1)
 carbon_wide$yyyy = substring(carbon_wide$from, first=1, last=4)
 carbon_wide$mm = substring(carbon_wide$from, first=6, last=7)
 carbon_wide$yyyymm = paste0(carbon_wide$yyyy, carbon_wide$mm)
+carbon_wide$date = as.Date(substring(carbon_wide$from, first=1, last=10), format="%Y-%m-%d")
 
 carbon_wide$season =
   if_else(carbon_wide$mm %in% c("04", "05", "06"), "spring",
@@ -255,6 +258,7 @@ if(want_reg_long==1)
 reg_long$yyyy = substring(reg_long$from, first=1, last=4)
 reg_long$mm = substring(reg_long$from, first=6, last=7)
 reg_long$yyyymm = paste0(reg_long$yyyy, reg_long$mm)
+reg_long$date = as.Date(substring(reg_long$from, first=1, last=10), format="%Y-%m-%d")
 
 reg_long$season =
   if_else(reg_long$mm %in% c("04", "05", "06"), "spring",
@@ -262,6 +266,22 @@ reg_long$season =
   if_else(reg_long$mm %in% c("10", "11", "12"), "fall",
   if_else(reg_long$mm %in% c("01", "02", "03"), "winter", NA))))
 }
+  
+  
+  
+#impose ordering on categorical variables
+  
+if(want_int==1 | want_gen==1 | want_reg_wide==1)
+{
+carbon_wide$index <- ordered(carbon_wide$index, levels = c("very high", "high", "moderate", "low", "very low"))
+carbon_wide$season <- ordered(carbon_wide$season, levels = c("spring", "summer", "fall", "winter"))
+}
+  
+if(want_reg_long==1)
+{
+reg_long$index <- ordered(reg_long$index, levels = c("very high", "high", "moderate", "low", "very low"))
+reg_long$season <- ordered(reg_long$season, levels = c("spring", "summer", "fall", "winter"))
+}  
   
 
   
@@ -417,13 +437,351 @@ long <-
 # Exploratory Data Analysis
 
 ``` r
-library(tidyverse)
-#ggplot(wide, aes(x = yyyymm, y = actual, color = area_name)) + geom_line()
-#ggplot(wide, aes(x = yyyymm, y = actual)) + geom_line()
+#national, over time
+ggplot(wide, aes(x = date, y = actual)) + geom_line() + geom_smooth() +
+labs(y = "CO2 emissions (in gCO2)",
+     title = "CO2 Emissions in Great Britain: 2019-2022")
 ```
 
-\#scatterplot: forecast x actual (by year?) \#line chart: *actual* over
-time (for national) \#line chart: *psuedo-actual* over time (for
-regions) \#stacked bar: generation mix (by time, and/or by region?)
-\#ggradar? generation mix (by time, and/or by region?) \#cowplot? actual
-by season? (for national) \`\`\`
+    ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
+
+    ## Warning: Removed 285 rows containing non-finite values (`stat_smooth()`).
+
+![](README_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+
+``` r
+wide %>%
+  group_by(yyyy) %>%
+  summarize(mean_actual = mean(actual, na.rm=TRUE))
+```
+
+    ## # A tibble: 4 × 2
+    ##   yyyy  mean_actual
+    ##   <chr>       <dbl>
+    ## 1 2019         215.
+    ## 2 2020         180.
+    ## 3 2021         196.
+    ## 4 2022         183.
+
+``` r
+#scatterplot, forecast vs. actual
+ggplot(wide, aes(x = forecast, y = actual)) + geom_point() +
+  labs(y = "actual CO2 emissions (in gCO2)", 
+       x = "forecast CO2 emissions (in gCO2)", 
+       title = "Forecast vs. Actual CO2 Emissions (outliers included): 2019-2022")
+```
+
+    ## Warning: Removed 285 rows containing missing values (`geom_point()`).
+
+![](README_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+
+``` r
+no_outliers <- wide %>% filter(forecast < 1000)
+ggplot(no_outliers, aes(x = forecast, y = actual)) + geom_point() +
+labs(y = "actual CO2 emissions (in gCO2)", 
+     x = "forecast CO2 emissions (in gCO2)", 
+     title = "Forecast vs. Actual CO2 Emissions (outliers excluded): 2019-2022")
+```
+
+    ## Warning: Removed 282 rows containing missing values (`geom_point()`).
+
+![](README_files/figure-gfm/unnamed-chunk-6-2.png)<!-- -->
+
+``` r
+#by season
+wide$index <- ordered(wide$index, levels = c("very high", "high", "moderate", "low", "very low"))
+wide$season <- ordered(wide$season, levels = c("spring", "summer", "fall", "winter"))
+#can do the above ordering in the function
+
+ggplot(wide, aes(x=season)) + geom_bar(aes(fill = as.factor(index)), position = "dodge") + 
+  labs(title = "Counts of Daily CO2 Emissions Indices, by Season: 2019-2022") +
+  scale_fill_discrete(name = "Emissions Index")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+
+``` r
+table(wide$season, wide$index)
+```
+
+    ##         
+    ##          very high high moderate  low very low
+    ##   spring         0 1806     3886 1806        0
+    ##   summer         5 3029     3241 1225        0
+    ##   fall          10 2509     2880 2100        1
+    ##   winter        82 1946     3174 2291        7
+
+``` r
+wide %>%
+  group_by(season) %>%
+  summarize(mean = mean(actual, na.rm=TRUE))
+```
+
+    ## # A tibble: 4 × 2
+    ##   season  mean
+    ##   <ord>  <dbl>
+    ## 1 spring  187.
+    ## 2 summer  208.
+    ## 3 fall    192.
+    ## 4 winter  186.
+
+``` r
+#over time, by region
+ggplot(long, aes(x = date, y = forecast, color=shortname)) + geom_smooth() +
+  labs(y = "forecast CO2 emissions (in gCO2)", 
+       title = "Forecast CO2 Emissions (as a proxy for actual emissions), by Region: 2019-2022") +
+  scale_color_discrete(name = "Region")  
+```
+
+    ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
+
+![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+
+``` r
+#limit to principle regions
+e_s_w <-
+  long %>%
+  filter(shortname %in% c("England", "Scotland", "Wales", "GB"))
+
+ggplot(e_s_w, aes(x = date, y = forecast, color=shortname)) + geom_smooth() +
+  labs(y = "forecast CO2 emissions (in gCO2)", 
+       title = "Forecast CO2 Emissions (as a proxy for actual emissions), by Principal Region: 2019-2022") +
+  scale_color_discrete(name = "Region")
+```
+
+    ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
+
+![](README_files/figure-gfm/unnamed-chunk-8-2.png)<!-- -->
+
+``` r
+#association between source of electricity and CO2 emissions
+ggplot(wide, aes(x = biomass, y = actual, position = "jitter")) + 
+  geom_point() + geom_smooth() +
+  labs(y = "actual CO2 emissions (in gCO2)", 
+     x = "proportion of electricity generated by biomass", 
+     title = "Biomass-Generated Electricity vs. CO2 Emissions: 2019-2022")
+```
+
+    ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
+
+    ## Warning: Removed 285 rows containing non-finite values (`stat_smooth()`).
+
+    ## Warning: Removed 285 rows containing missing values (`geom_point()`).
+
+![](README_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+
+``` r
+ggplot(wide, aes(x = coal, y = actual, position = "jitter")) + 
+  geom_point() + geom_smooth() +
+  labs(y = "actual CO2 emissions (in gCO2)", 
+       x = "proportion of electricity generated by coal", 
+       title = "Coal-Generated Electricity vs. CO2 Emissions: 2019-2022")
+```
+
+    ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
+
+    ## Warning: Removed 285 rows containing non-finite values (`stat_smooth()`).
+    ## Removed 285 rows containing missing values (`geom_point()`).
+
+![](README_files/figure-gfm/unnamed-chunk-9-2.png)<!-- -->
+
+``` r
+ggplot(wide, aes(x = imports, y = actual, position = "jitter")) + 
+  geom_point() + geom_smooth() +
+  labs(y = "actual CO2 emissions (in gCO2)", 
+       x = "proportion of electricity that is imported", 
+       title = "Imported Electricity vs. CO2 Emissions: 2019-2022")
+```
+
+    ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
+
+    ## Warning: Removed 285 rows containing non-finite values (`stat_smooth()`).
+    ## Removed 285 rows containing missing values (`geom_point()`).
+
+![](README_files/figure-gfm/unnamed-chunk-9-3.png)<!-- -->
+
+``` r
+ggplot(wide, aes(x = gas, y = actual, position = "jitter")) + 
+  geom_point() + geom_smooth() +
+  labs(y = "actual CO2 emissions (in gCO2)", 
+       x = "proportion of electricity generated by gas", 
+       title = "Gas-Generated Electricity vs. CO2 Emissions: 2019-2022")
+```
+
+    ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
+
+    ## Warning: Removed 285 rows containing non-finite values (`stat_smooth()`).
+    ## Removed 285 rows containing missing values (`geom_point()`).
+
+![](README_files/figure-gfm/unnamed-chunk-9-4.png)<!-- -->
+
+``` r
+ggplot(wide, aes(x = nuclear, y = actual, position = "jitter")) + 
+  geom_point() + geom_smooth() +
+  labs(y = "actual CO2 emissions (in gCO2)", 
+       x = "proportion of electricity that is nuclear-generated", 
+       title = "Nuclear-Generated Electricity vs. CO2 Emissions: 2019-2022")
+```
+
+    ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
+
+    ## Warning: Removed 285 rows containing non-finite values (`stat_smooth()`).
+    ## Removed 285 rows containing missing values (`geom_point()`).
+
+![](README_files/figure-gfm/unnamed-chunk-9-5.png)<!-- -->
+
+``` r
+ggplot(wide, aes(x = hydro, y = actual, position = "jitter")) + 
+  geom_point() + geom_smooth() +
+  labs(y = "actual CO2 emissions (in gCO2)", 
+       x = "proportion of electricity that is hyrdro-generated", 
+       title = "Hydro-Generated Electricity vs. CO2 Emissions: 2019-2022")
+```
+
+    ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
+
+    ## Warning: Removed 285 rows containing non-finite values (`stat_smooth()`).
+    ## Removed 285 rows containing missing values (`geom_point()`).
+
+![](README_files/figure-gfm/unnamed-chunk-9-6.png)<!-- -->
+
+``` r
+ggplot(wide, aes(x = solar, y = actual, position = "jitter")) + 
+  geom_point() + geom_smooth() +
+  labs(y = "actual CO2 emissions (in gCO2)", 
+       x = "proportion of electricity that is solar-generated", 
+       title = "Solar-Generated Electricity vs. CO2 Emissions: 2019-2022")
+```
+
+    ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
+
+    ## Warning: Removed 285 rows containing non-finite values (`stat_smooth()`).
+    ## Removed 285 rows containing missing values (`geom_point()`).
+
+![](README_files/figure-gfm/unnamed-chunk-9-7.png)<!-- -->
+
+``` r
+ggplot(wide, aes(x = wind, y = actual, position = "jitter")) + 
+  geom_point() + geom_smooth() +
+  labs(y = "actual CO2 emissions (in gCO2)", 
+       x = "proportion of electricity that is wind-generated", 
+       title = "Wind-Generated Electricity vs. CO2 Emissions: 2019-2022")
+```
+
+    ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
+
+    ## Warning: Removed 285 rows containing non-finite values (`stat_smooth()`).
+    ## Removed 285 rows containing missing values (`geom_point()`).
+
+![](README_files/figure-gfm/unnamed-chunk-9-8.png)<!-- -->
+
+``` r
+# generation mix
+by_year <-
+  wide %>%
+  group_by(yyyy) %>%
+  summarize(biomass = mean(biomass, na.rm=TRUE),
+            coal = mean(coal, na.rm=TRUE),
+            imports = mean(imports, na.rm=TRUE),
+            gas = mean(gas, na.rm=TRUE),
+            nuclear = mean(nuclear, na.rm=TRUE),
+            other = mean(other, na.rm=TRUE),
+            hydro = mean(hydro, na.rm=TRUE),
+            solar = mean(solar, na.rm=TRUE),
+            wind = mean(wind, na.rm=TRUE))
+
+ggplot(by_year, aes(x=yyyy, group=1)) +
+  geom_line(aes(y=biomass, color="biomass")) +
+  geom_line(aes(y=coal, color="coal")) +
+  geom_line(aes(y=imports, color="imports")) +
+  geom_line(aes(y=gas, color="gas")) +
+  geom_line(aes(y=nuclear, color="nuclear")) +
+  geom_line(aes(y=hydro, color="hydro")) +
+  geom_line(aes(y=solar, color="solar")) +
+  geom_line(aes(y=wind, color="wind")) +
+  geom_line(aes(y=other, color="other")) +
+  scale_color_discrete(name = "generation source") +
+  labs(y = "Percentage",
+    title = "Percentage of Total Electricity Generated, by Source (yearly averages)")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+
+``` r
+ggplot(wide, aes(x=date)) +
+  geom_smooth(aes(y=biomass, color="biomass")) +
+  geom_smooth(aes(y=coal, color="coal")) +
+  geom_smooth(aes(y=imports, color="imports")) +
+  geom_smooth(aes(y=gas, color="gas")) +
+  geom_smooth(aes(y=nuclear, color="nuclear")) +
+  geom_smooth(aes(y=hydro, color="hydro")) +
+  geom_smooth(aes(y=solar, color="solar")) +
+  geom_smooth(aes(y=wind, color="wind")) +
+  geom_smooth(aes(y=other, color="other"))
+```
+
+    ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
+    ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
+    ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
+    ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
+    ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
+    ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
+    ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
+    ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
+    ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
+
+![](README_files/figure-gfm/unnamed-chunk-10-2.png)<!-- -->
+
+``` r
+#radar plot of generation mix by region
+library(ggradar)
+library(scales)
+reg_radar <-
+  long %>%
+  drop_na() %>%
+  filter(shortname %in% c("England", "Scotland", "Wales", "GB")) %>%
+  group_by(shortname) %>%
+  summarize(biomass = mean(biomass, na.rm=TRUE),
+            coal = mean(coal, na.rm=TRUE),
+            imports = mean(imports, na.rm=TRUE),
+            gas = mean(gas, na.rm=TRUE),
+            nuclear = mean(nuclear, na.rm=TRUE),
+            #other = mean(other, na.rm=TRUE),
+            hydro = mean(hydro, na.rm=TRUE),
+            solar = mean(solar, na.rm=TRUE),
+            wind = mean(wind, na.rm=TRUE)) %>%
+  ungroup() %>%
+  mutate_at(vars(-shortname), rescale)
+
+ggradar(reg_radar) + labs(title = "Radar Plot of Electricity-Generation Mix, by Region") 
+```
+
+![](README_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+
+``` r
+  #above code is based on https://r-graph-gallery.com/web-radar-chart-with-R.html
+```
+
+``` r
+#actual (i.e. un-scaled) proportions underlying the radar plot
+long %>%
+  filter(shortname %in% c("England", "Scotland", "Wales", "GB")) %>%
+  group_by(shortname) %>%
+  summarize(biomass = mean(biomass, na.rm=TRUE),
+            coal = mean(coal, na.rm=TRUE),
+            imports = mean(imports, na.rm=TRUE),
+            gas = mean(gas, na.rm=TRUE),
+            nuclear = mean(nuclear, na.rm=TRUE),
+            hydro = mean(hydro, na.rm=TRUE),
+            solar = mean(solar, na.rm=TRUE),
+            wind = mean(wind, na.rm=TRUE),
+            other = mean(other, na.rm=TRUE))
+```
+
+    ## # A tibble: 4 × 10
+    ##   shortname biomass   coal imports   gas nuclear hydro solar  wind other
+    ##   <chr>       <dbl>  <dbl>   <dbl> <dbl>   <dbl> <dbl> <dbl> <dbl> <dbl>
+    ## 1 England     7.45  1.75      8.13  40.2   17.8   1.03 4.29   19.4 0    
+    ## 2 GB          6.51  1.61      7.47  38.8   17.8   1.84 3.90   22.0 0.114
+    ## 3 Scotland    1.37  0.0123    1.47  13.3   27.7   7.93 0.886  47.3 0    
+    ## 4 Wales       0.122 0.834     3.76  60.1    2.57  4.58 3.27   24.7 0
