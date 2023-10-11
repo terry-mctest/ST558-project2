@@ -16,9 +16,9 @@ function to obtain data, an exploratory data analysis will be performed.
 The Carbon Intensity API provides information regarding regional carbon
 intensity of the electricity system in Great Britain. Since carbon
 intensity varies by hour, day, and season (due changes in demand as well
-as changes in means of generating electricity), these data are stored at
-the micro-level, e.g. individual carbon intensity readings for each
-half-hour period over a number of years. Per the \[National Grid’s
+as variation in the means of generating electricity), these data are
+stored at the micro-level, e.g. individual carbon intensity readings for
+each half-hour period over a number of years. Per the \[National Grid’s
 Carbon Intensity API website\]
 (<https://carbon-intensity.github.io/api-definitions/?shell#carbon-intensity-api-v2-0-0>):
 
@@ -59,6 +59,7 @@ library(httr)
 library(dplyr)
 library(tidyr)
 library(jsonlite)
+library(tidyverse)
 ```
 
 <br>
@@ -83,17 +84,17 @@ must be capable of navigating certain features of this API:
 The function presented here addresses the above features of the CI API
 by first requesting specification of the following arguments:
 
-- “from_dt” and “to_dt”: These are required arguments, each representing
+- `from_dt` and `to_dt`: These are required arguments, each representing
   a timestamp which bookends the window of time for which data is
   desired.
-- “want_int”, “want_gen”, “want_reg_wide”, and “want_reg_long”: These
+- `want_int`, `want_gen`, `want_reg_wide`, and `want_reg_long`: These
   are optional arguments through which the end user specifies (by
   setting the applicable argument equal to 1) whether they are
   requesting national-level intensity data; national-level
   generation-mix data; regional-level data (in wide format); and/or
   regional-level data (in long format).
 
-The output of the CI API function call (named simply “carbon” as shown
+The output of the CI API function call (named simply `carbon` as shown
 here) is a list comprised of either: one wide dataset + one long
 dataset; a wide dataset only; or a long dataset only. More specifically,
 by selectively setting the aforementioned optional arguments to 1, the
@@ -116,13 +117,13 @@ Notably, each of these 15 options/combinations could be used in
 conjunction with an infinite number of time windows, providing the user
 with an even greater number of options for each data request.
 
-The “carbon” function also converts the bookend timestamps (which are
-simply textstrings in “YYYY-MM-DDTHH:MMZ” format as required to access
+The `carbon` function also converts the bookend timestamps (which are
+actually textstrings in “YYYY-MM-DDTHH:MMZ” format as required to access
 the CI API) to simple quasi-date numeric values (e.g. YYYYMM) to
-facilitate the exploratory data analysis (though a proper date value may
-be required for more rigorous analyses).
+facilitate the forthcoming exploratory data analysis (though a proper
+date value may be required for more rigorous analyses).
 
-The code chunk to follow shows R syntax for the entire “carbon”
+The code chunk to follow shows R syntax for the entire `carbon`
 function, annotated with comments to describe the purpose of each
 sub-chunk of code:
 
@@ -235,7 +236,9 @@ else if(want_reg_wide==1)
   
 
 #to facilitate downstream analyses, derive a set of more-usable date/season vars
-  
+
+if(want_int==1 | want_gen==1 | want_reg_wide==1)
+{
 carbon_wide$yyyy = substring(carbon_wide$from, first=1, last=4)
 carbon_wide$mm = substring(carbon_wide$from, first=6, last=7)
 carbon_wide$yyyymm = paste0(carbon_wide$yyyy, carbon_wide$mm)
@@ -245,7 +248,10 @@ carbon_wide$season =
   if_else(carbon_wide$mm %in% c("07", "08", "09"), "summer",
   if_else(carbon_wide$mm %in% c("10", "11", "12"), "fall",
   if_else(carbon_wide$mm %in% c("01", "02", "03"), "winter", NA))))
+}
 
+if(want_reg_long==1)
+{
 reg_long$yyyy = substring(reg_long$from, first=1, last=4)
 reg_long$mm = substring(reg_long$from, first=6, last=7)
 reg_long$yyyymm = paste0(reg_long$yyyy, reg_long$mm)
@@ -255,7 +261,8 @@ reg_long$season =
   if_else(reg_long$mm %in% c("07", "08", "09"), "summer",
   if_else(reg_long$mm %in% c("10", "11", "12"), "fall",
   if_else(reg_long$mm %in% c("01", "02", "03"), "winter", NA))))
-
+}
+  
 
   
     
@@ -280,33 +287,129 @@ else if(want_reg_long==1)
 # Using the Custom Function to Return Data
 
 ``` r
-jan2019 <- carbon(from_dt="2019-01-10T12:00Z", to_dt="2019-01-20T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+jan2019 <- carbon(from_dt="2019-01-08T12:00Z", to_dt="2019-01-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+feb2019 <- carbon(from_dt="2019-02-08T12:00Z", to_dt="2019-02-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+mar2019 <- carbon(from_dt="2019-03-08T12:00Z", to_dt="2019-03-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+apr2019 <- carbon(from_dt="2019-04-08T12:00Z", to_dt="2019-04-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+may2019 <- carbon(from_dt="2019-05-08T12:00Z", to_dt="2019-05-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+jun2019 <- carbon(from_dt="2019-06-08T12:00Z", to_dt="2019-06-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+jul2019 <- carbon(from_dt="2019-07-08T12:00Z", to_dt="2019-07-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+aug2019 <- carbon(from_dt="2019-08-08T12:00Z", to_dt="2019-08-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+sep2019 <- carbon(from_dt="2019-09-08T12:00Z", to_dt="2019-09-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+oct2019 <- carbon(from_dt="2019-10-08T12:00Z", to_dt="2019-10-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+nov2019 <- carbon(from_dt="2019-11-08T12:00Z", to_dt="2019-11-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+dec2019 <- carbon(from_dt="2019-12-08T12:00Z", to_dt="2019-12-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
 
-feb2019 <- carbon(from_dt="2019-02-10T12:00Z", to_dt="2019-02-20T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+jan2020 <- carbon(from_dt="2020-01-08T12:00Z", to_dt="2020-01-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+feb2020 <- carbon(from_dt="2020-02-08T12:00Z", to_dt="2020-02-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+mar2020 <- carbon(from_dt="2020-03-08T12:00Z", to_dt="2020-03-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+apr2020 <- carbon(from_dt="2020-04-08T12:00Z", to_dt="2020-04-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+may2020 <- carbon(from_dt="2020-05-08T12:00Z", to_dt="2020-05-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+jun2020 <- carbon(from_dt="2020-06-08T12:00Z", to_dt="2020-06-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+jul2020 <- carbon(from_dt="2020-07-08T12:00Z", to_dt="2020-07-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+aug2020 <- carbon(from_dt="2020-08-08T12:00Z", to_dt="2020-08-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+sep2020 <- carbon(from_dt="2020-09-08T12:00Z", to_dt="2020-09-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+oct2020 <- carbon(from_dt="2020-10-08T12:00Z", to_dt="2020-10-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+nov2020 <- carbon(from_dt="2020-11-08T12:00Z", to_dt="2020-11-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+dec2020 <- carbon(from_dt="2020-12-08T12:00Z", to_dt="2020-12-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
 
-mar2019 <- carbon(from_dt="2019-03-10T12:00Z", to_dt="2019-03-20T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+jan2021 <- carbon(from_dt="2021-01-08T12:00Z", to_dt="2021-01-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+feb2021 <- carbon(from_dt="2021-02-08T12:00Z", to_dt="2021-02-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+mar2021 <- carbon(from_dt="2021-03-08T12:00Z", to_dt="2021-03-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+apr2021 <- carbon(from_dt="2021-04-08T12:00Z", to_dt="2021-04-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+may2021 <- carbon(from_dt="2021-05-08T12:00Z", to_dt="2021-05-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+jun2021 <- carbon(from_dt="2021-06-08T12:00Z", to_dt="2021-06-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+jul2021 <- carbon(from_dt="2021-07-08T12:00Z", to_dt="2021-07-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+aug2021 <- carbon(from_dt="2021-08-08T12:00Z", to_dt="2021-08-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+sep2021 <- carbon(from_dt="2021-09-08T12:00Z", to_dt="2021-09-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+oct2021 <- carbon(from_dt="2021-10-08T12:00Z", to_dt="2021-10-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+nov2021 <- carbon(from_dt="2021-11-08T12:00Z", to_dt="2021-11-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+dec2021 <- carbon(from_dt="2021-12-08T12:00Z", to_dt="2021-12-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
 
-apr2019 <- carbon(from_dt="2019-04-10T12:00Z", to_dt="2019-04-20T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
-
-may2019 <- carbon(from_dt="2019-05-10T12:00Z", to_dt="2019-05-20T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
-
-jun2019 <- carbon(from_dt="2019-06-10T12:00Z", to_dt="2019-06-20T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
-
-jul2019 <- carbon(from_dt="2019-07-10T12:00Z", to_dt="2019-07-20T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
-
-aug2019 <- carbon(from_dt="2019-08-10T12:00Z", to_dt="2019-08-20T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
-
-sep2019 <- carbon(from_dt="2019-09-10T12:00Z", to_dt="2019-09-20T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
-
-oct2019 <- carbon(from_dt="2019-10-10T12:00Z", to_dt="2019-10-20T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
-
-nov2019 <- carbon(from_dt="2019-11-10T12:00Z", to_dt="2019-11-20T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
-
-dec2019 <- carbon(from_dt="2019-12-10T12:00Z", to_dt="2019-12-20T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+jan2022 <- carbon(from_dt="2022-01-08T12:00Z", to_dt="2022-01-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+feb2022 <- carbon(from_dt="2022-02-08T12:00Z", to_dt="2022-02-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+mar2022 <- carbon(from_dt="2022-03-08T12:00Z", to_dt="2022-03-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+apr2022 <- carbon(from_dt="2022-04-08T12:00Z", to_dt="2022-04-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+may2022 <- carbon(from_dt="2022-05-08T12:00Z", to_dt="2022-05-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+jun2022 <- carbon(from_dt="2022-06-08T12:00Z", to_dt="2022-06-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+jul2022 <- carbon(from_dt="2022-07-08T12:00Z", to_dt="2022-07-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+aug2022 <- carbon(from_dt="2022-08-08T12:00Z", to_dt="2022-08-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+sep2022 <- carbon(from_dt="2022-09-08T12:00Z", to_dt="2022-09-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+oct2022 <- carbon(from_dt="2022-10-08T12:00Z", to_dt="2022-10-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+nov2022 <- carbon(from_dt="2022-11-08T12:00Z", to_dt="2022-11-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
+dec2022 <- carbon(from_dt="2022-12-08T12:00Z", to_dt="2022-12-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
 
 
-year2019 <-
-  bind_rows(jan2019, feb2019, mar2019, apr2019, may2019, jun2019, jul2019, aug2019, sep2019, oct2019, nov2019, dec2019)
+wide <-
+  bind_rows(
+  jan2019, feb2019, mar2019, apr2019, may2019, jun2019, jul2019, aug2019, sep2019, oct2019, nov2019, dec2019,
+  jan2020, feb2020, mar2020, apr2020, may2020, jun2020, jul2020, aug2020, sep2020, oct2020, nov2020, dec2020,
+  jan2021, feb2021, mar2021, apr2021, may2021, jun2021, jul2021, aug2021, sep2021, oct2021, nov2021, dec2021,
+  jan2022, feb2022, mar2022, apr2022, may2022, jun2022, jul2022, aug2022, sep2022, oct2022, nov2022, dec2022)
+```
+
+<br>
+
+``` r
+jan2019 <- carbon(from_dt="2019-01-08T12:00Z", to_dt="2019-01-21T12:00Z", want_reg_long=1)
+feb2019 <- carbon(from_dt="2019-02-08T12:00Z", to_dt="2019-02-21T12:00Z", want_reg_long=1)
+mar2019 <- carbon(from_dt="2019-03-08T12:00Z", to_dt="2019-03-21T12:00Z", want_reg_long=1)
+apr2019 <- carbon(from_dt="2019-04-08T12:00Z", to_dt="2019-04-21T12:00Z", want_reg_long=1)
+may2019 <- carbon(from_dt="2019-05-08T12:00Z", to_dt="2019-05-21T12:00Z", want_reg_long=1)
+jun2019 <- carbon(from_dt="2019-06-08T12:00Z", to_dt="2019-06-21T12:00Z", want_reg_long=1)
+jul2019 <- carbon(from_dt="2019-07-08T12:00Z", to_dt="2019-07-21T12:00Z", want_reg_long=1)
+aug2019 <- carbon(from_dt="2019-08-08T12:00Z", to_dt="2019-08-21T12:00Z", want_reg_long=1)
+sep2019 <- carbon(from_dt="2019-09-08T12:00Z", to_dt="2019-09-21T12:00Z", want_reg_long=1)
+oct2019 <- carbon(from_dt="2019-10-08T12:00Z", to_dt="2019-10-21T12:00Z", want_reg_long=1)
+nov2019 <- carbon(from_dt="2019-11-08T12:00Z", to_dt="2019-11-21T12:00Z", want_reg_long=1)
+dec2019 <- carbon(from_dt="2019-12-08T12:00Z", to_dt="2019-12-21T12:00Z", want_reg_long=1)
+
+jan2020 <- carbon(from_dt="2020-01-08T12:00Z", to_dt="2020-01-21T12:00Z", want_reg_long=1)
+feb2020 <- carbon(from_dt="2020-02-08T12:00Z", to_dt="2020-02-21T12:00Z", want_reg_long=1)
+mar2020 <- carbon(from_dt="2020-03-08T12:00Z", to_dt="2020-03-21T12:00Z", want_reg_long=1)
+apr2020 <- carbon(from_dt="2020-04-08T12:00Z", to_dt="2020-04-21T12:00Z", want_reg_long=1)
+may2020 <- carbon(from_dt="2020-05-08T12:00Z", to_dt="2020-05-21T12:00Z", want_reg_long=1)
+jun2020 <- carbon(from_dt="2020-06-08T12:00Z", to_dt="2020-06-21T12:00Z", want_reg_long=1)
+jul2020 <- carbon(from_dt="2020-07-08T12:00Z", to_dt="2020-07-21T12:00Z", want_reg_long=1)
+aug2020 <- carbon(from_dt="2020-08-08T12:00Z", to_dt="2020-08-21T12:00Z", want_reg_long=1)
+sep2020 <- carbon(from_dt="2020-09-08T12:00Z", to_dt="2020-09-21T12:00Z", want_reg_long=1)
+oct2020 <- carbon(from_dt="2020-10-08T12:00Z", to_dt="2020-10-21T12:00Z", want_reg_long=1)
+nov2020 <- carbon(from_dt="2020-11-08T12:00Z", to_dt="2020-11-21T12:00Z", want_reg_long=1)
+dec2020 <- carbon(from_dt="2020-12-08T12:00Z", to_dt="2020-12-21T12:00Z", want_reg_long=1)
+
+jan2021 <- carbon(from_dt="2021-01-08T12:00Z", to_dt="2021-01-21T12:00Z", want_reg_long=1)
+feb2021 <- carbon(from_dt="2021-02-08T12:00Z", to_dt="2021-02-21T12:00Z", want_reg_long=1)
+mar2021 <- carbon(from_dt="2021-03-08T12:00Z", to_dt="2021-03-21T12:00Z", want_reg_long=1)
+apr2021 <- carbon(from_dt="2021-04-08T12:00Z", to_dt="2021-04-21T12:00Z", want_reg_long=1)
+may2021 <- carbon(from_dt="2021-05-08T12:00Z", to_dt="2021-05-21T12:00Z", want_reg_long=1)
+jun2021 <- carbon(from_dt="2021-06-08T12:00Z", to_dt="2021-06-21T12:00Z", want_reg_long=1)
+jul2021 <- carbon(from_dt="2021-07-08T12:00Z", to_dt="2021-07-21T12:00Z", want_reg_long=1)
+aug2021 <- carbon(from_dt="2021-08-08T12:00Z", to_dt="2021-08-21T12:00Z", want_reg_long=1)
+sep2021 <- carbon(from_dt="2021-09-08T12:00Z", to_dt="2021-09-21T12:00Z", want_reg_long=1)
+oct2021 <- carbon(from_dt="2021-10-08T12:00Z", to_dt="2021-10-21T12:00Z", want_reg_long=1)
+nov2021 <- carbon(from_dt="2021-11-08T12:00Z", to_dt="2021-11-21T12:00Z", want_reg_long=1)
+dec2021 <- carbon(from_dt="2021-12-08T12:00Z", to_dt="2021-12-21T12:00Z", want_reg_long=1)
+
+jan2022 <- carbon(from_dt="2022-01-08T12:00Z", to_dt="2022-01-21T12:00Z", want_reg_long=1)
+feb2022 <- carbon(from_dt="2022-02-08T12:00Z", to_dt="2022-02-21T12:00Z", want_reg_long=1)
+mar2022 <- carbon(from_dt="2022-03-08T12:00Z", to_dt="2022-03-21T12:00Z", want_reg_long=1)
+apr2022 <- carbon(from_dt="2022-04-08T12:00Z", to_dt="2022-04-21T12:00Z", want_reg_long=1)
+may2022 <- carbon(from_dt="2022-05-08T12:00Z", to_dt="2022-05-21T12:00Z", want_reg_long=1)
+jun2022 <- carbon(from_dt="2022-06-08T12:00Z", to_dt="2022-06-21T12:00Z", want_reg_long=1)
+jul2022 <- carbon(from_dt="2022-07-08T12:00Z", to_dt="2022-07-21T12:00Z", want_reg_long=1)
+aug2022 <- carbon(from_dt="2022-08-08T12:00Z", to_dt="2022-08-21T12:00Z", want_reg_long=1)
+sep2022 <- carbon(from_dt="2022-09-08T12:00Z", to_dt="2022-09-21T12:00Z", want_reg_long=1)
+oct2022 <- carbon(from_dt="2022-10-08T12:00Z", to_dt="2022-10-21T12:00Z", want_reg_long=1)
+nov2022 <- carbon(from_dt="2022-11-08T12:00Z", to_dt="2022-11-21T12:00Z", want_reg_long=1)
+dec2022 <- carbon(from_dt="2022-12-08T12:00Z", to_dt="2022-12-21T12:00Z", want_reg_long=1)
+
+
+long <-
+  bind_rows(
+  jan2019, feb2019, mar2019, apr2019, may2019, jun2019, jul2019, aug2019, sep2019, oct2019, nov2019, dec2019,
+  jan2020, feb2020, mar2020, apr2020, may2020, jun2020, jul2020, aug2020, sep2020, oct2020, nov2020, dec2020,
+  jan2021, feb2021, mar2021, apr2021, may2021, jun2021, jul2021, aug2021, sep2021, oct2021, nov2021, dec2021,
+  jan2022, feb2022, mar2022, apr2022, may2022, jun2022, jul2022, aug2022, sep2022, oct2022, nov2022, dec2022)
 ```
 
 <br>
@@ -314,158 +417,13 @@ year2019 <-
 # Exploratory Data Analysis
 
 ``` r
-mean(year2019$forecast_1)
+library(tidyverse)
+#ggplot(wide, aes(x = yyyymm, y = actual, color = area_name)) + geom_line()
+#ggplot(wide, aes(x = yyyymm, y = actual)) + geom_line()
 ```
 
-    ## [1] 100.0561
-
-``` r
-mean(year2019$forecast_2)
-```
-
-    ## [1] 33.27374
-
-``` r
-mean(year2019$forecast_3)
-```
-
-    ## [1] 63.7694
-
-``` r
-mean(year2019$forecast_4)
-```
-
-    ## [1] 45.05839
-
-``` r
-mean(year2019$forecast_5)
-```
-
-    ## [1] 268.4652
-
-``` r
-mean(year2019$forecast_6)
-```
-
-    ## [1] 236.8051
-
-``` r
-mean(year2019$forecast_7)
-```
-
-    ## [1] 338.9783
-
-``` r
-mean(year2019$forecast_8)
-```
-
-    ## [1] 180.9532
-
-``` r
-mean(year2019$forecast_9)
-```
-
-    ## [1] 363.0371
-
-``` r
-mean(year2019$forecast_10)
-```
-
-    ## [1] 149.5137
-
-``` r
-mean(year2019$forecast_11)
-```
-
-    ## [1] 129.6942
-
-``` r
-mean(year2019$forecast_12)
-```
-
-    ## [1] 258.442
-
-``` r
-mean(year2019$forecast_13)
-```
-
-    ## [1] 216.3463
-
-``` r
-mean(year2019$forecast_14)
-```
-
-    ## [1] 236.7277
-
-``` r
-mean(year2019$forecast_15)
-```
-
-    ## [1] 202.9335
-
-``` r
-mean(year2019$forecast_16)
-```
-
-    ## [1] 59.69196
-
-``` r
-mean(year2019$forecast_17)
-```
-
-    ## [1] 279.7741
-
-``` r
-mean(year2019$forecast_18)
-```
-
-    ## [1] 214.0347
-
-``` r
-year2019 <-
-  year2019 %>%
-  group_by(index) %>%
-  mutate(mean_actual = mean(actual, na.rm = TRUE))
-
-#year2019$yyyy = substring(year2019$from, first=1, last=4)
-#year2019$mm = substring(year2019$from, first=6, last=7)
-#year2019$yyyymm = paste0(year2019$yyyy, year2019$mm)
-
-year2019 %>%
-  group_by(yyyymm) %>%
-  summarize(mean(actual, na.rm = TRUE))
-```
-
-    ## # A tibble: 12 × 2
-    ##    yyyymm `mean(actual, na.rm = TRUE)`
-    ##    <chr>                         <dbl>
-    ##  1 201901                         257.
-    ##  2 201902                         196.
-    ##  3 201903                         182.
-    ##  4 201904                         213.
-    ##  5 201905                         223.
-    ##  6 201906                         219.
-    ##  7 201907                         231.
-    ##  8 201908                         178.
-    ##  9 201909                         196.
-    ## 10 201910                         207.
-    ## 11 201911                         264.
-    ## 12 201912                         218.
-
-``` r
-tb <- table(year2019$index)
-prop.table(tb)
-```
-
-    ## 
-    ##        high         low    moderate   very high 
-    ## 0.205994456 0.207726958 0.578135828 0.008142758
-
-``` r
-#scatterplot: forecast x actual (by year?)
-#line chart: *actual* over time (for national)
-#line chart: *psuedo-actual* over time (for regions)
-#stacked bar: generation mix (by time, and/or by region?)
-#ggradar? generation mix (by time, and/or by region?)
-#cowplot?  actual by season? (for national)
-```
+\#scatterplot: forecast x actual (by year?) \#line chart: *actual* over
+time (for national) \#line chart: *psuedo-actual* over time (for
+regions) \#stacked bar: generation mix (by time, and/or by region?)
+\#ggradar? generation mix (by time, and/or by region?) \#cowplot? actual
+by season? (for national) \`\`\`
