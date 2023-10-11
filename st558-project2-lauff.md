@@ -5,10 +5,11 @@ Terry McTest
 
 <br>
 
-This vignette focuses on a custom function that was developed to contact
-a particular API (Application Programming Interface) to query, parse,
-and return well-structured data. After using said function to obtain
-data, an exploratory data analysis will be performed. <br>
+This vignette focuses on a custom function that was developed for use in
+conjunction with a particular API (Application Programming Interface) in
+order to query, parse, and return well-structured data. After using said
+function to obtain data, an exploratory data analysis will be performed.
+<br>
 
 # The Official Carbon Intensity API for Great Britain
 
@@ -31,14 +32,27 @@ Carbon Intensity API website\]
 > distribution losses, and accounts for national electricity demand,
 > embedded wind and solar generation.
 
-The API consists of four primary endpoints:
+The API consists of three primary endpoints:
 
-- National-level carbon intensity
-- National-level electricity-generation mix
-- National statistics
-- Regional-level carbon intensity & electricity-generation mix <br>
+- *National-level carbon intensity*. This endpoint includes a continuous
+  measure of forecasted CO2 emissions per kilowatt hour of electricity
+  produced; a continuous measure of actual CO2 emissions produced; and a
+  categorical measure of actual CO2 emissions produced.
+- *National-level electricity-generation mix*. This endpoint includes
+  the percent distribution of how electricity is generated across
+  various generation sources, including biomass, coal, imports, gas,
+  nuclear, hydro, solar, wind, and “other”.
+- *Regional-level carbon intensity & electricity-generation mix*. This
+  endpoint includes (most) measures made available in the above
+  endpoints, though measures in the regional-level endpoint are stored
+  at a regional level (i.e. for each of 18 regions of Great Britain) as
+  opposed to being stored at a national level. <br>
 
 # Function for Returning Data From the API
+
+Before proceeding, we should make note of the specific R packages that
+are employed by either the custom function presented here, and/or by the
+exploratory data analysis to follow:
 
 ``` r
 library(httr)
@@ -47,12 +61,77 @@ library(tidyr)
 library(jsonlite)
 ```
 
+<br>
+
+A function intended to return data from the Carbon Intensity (CI) API
+must be capable of navigating certain features of this API:
+
+- The CI API needs to know the window of time for which data is desired,
+  even if that “window” is essentially a specific point in time
+  (e.g. “right now”) as opposed to an actual extended window.
+- The CI API is comprised of data objects nested within data objects
+  (e.g. data frames within data frames), and these structures must be
+  un-nested and re-structured to facilitate use of the data.
+- In general terms, the national data is structured as one record per
+  each half-hour period contained within the specified window of time,
+  while the regional data is structured with 18 records (one for each
+  region) per each half-hour period contained within the specified
+  window of time. The function must account for whether one or both
+  types of data are desired (i.e. national-level data and/or
+  regional-level data).
+
+The function presented here addresses the above features of the CI API
+by first requesting specification of the following arguments:
+
+- “from_dt” and “to_dt”: These are required arguments, each representing
+  a timestamp which bookends the window of time for which data is
+  desired.
+- “want_int”, “want_gen”, “want_reg_wide”, and “want_reg_long”: These
+  are optional arguments through which the end user specifies (by
+  setting the applicable argument equal to 1) whether they are
+  requesting national-level intensity data; national-level
+  generation-mix data; regional-level data (in wide format); and/or
+  regional-level data (in long format).
+
+The output of the CI API function call (named simply “carbon” as shown
+here) is a list comprised of either: one wide dataset + one long
+dataset; a wide dataset only; or a long dataset only. More specifically,
+by selectively setting the aforementioned optional arguments to 1, the
+user will receive a wide dataset comprised of either:
+
+1.  national-level intensity data + national-level generation-mix data +
+    regional-level data;
+2.  national-level intensity data + national-level generation-mix data;
+3.  national-level intensity data + regional-level data;
+4.  national-level generation-mix data + regional-level data;
+5.  national-level intensity data only;
+6.  national-level generation-mix data only; or
+7.  regional-level data only
+
+Each version of the wide dataset listed above can be output with or
+without an accompanying long dataset of regional-level data, for a total
+of (7 x 2) + 1 = 15 data request options/combinations (the “+1” option
+would be the long dataset of regional-level data with no wide dataset).
+Notably, each of these 15 options/combinations could be used in
+conjunction with an infinite number of time windows, providing the user
+with an even greater number of options for each data request.
+
+The “carbon” function also converts the bookend timestamps (which are
+simply textstrings in “YYYY-MM-DDTHH:MMZ” format as required to access
+the CI API) to simple quasi-date numeric values (e.g. YYYYMM) to
+facilitate the exploratory data analysis (though a proper date value may
+be required for more rigorous analyses).
+
+The code chunk to follow shows R syntax for the entire “carbon”
+function, annotated with comments to describe the purpose of each
+sub-chunk of code:
+
 ``` r
 carbon <- function(from_dt, to_dt, want_int=0, want_gen=0, want_reg_wide=0, want_reg_long=0)
 
 {
   
-#national-level data: carbon intensity
+#national-level carbon intensity data/endpoint
 
 if(want_int==1)
 {
@@ -73,7 +152,7 @@ int <-
 
   
 
-#national-level data: generation mix
+#national-level electricity-generation mix data/endpoint
 
 if(want_gen==1)
 {
@@ -84,7 +163,7 @@ gen_url = paste0(base, from_dt, slash, to_dt)
 gen_api <- GET(gen_url)
 parsed_gen <- fromJSON(rawToChar(gen_api$content))
 #str(parsed_gen$data)
-as_tibble(parsed_gen$data)
+#as_tibble(parsed_gen$data)
 
 gen <-
   parsed_gen$data %>%
@@ -95,7 +174,7 @@ gen <-
 
 
   
-#regional-level data
+#regional-level data/endpoint
   
 if(want_reg_wide==1 | want_reg_long==1)
 {
@@ -155,7 +234,7 @@ else if(want_reg_wide==1)
 
   
 
-#to facilitate downstream analyses, derive a few more-usable date/season vars
+#to facilitate downstream analyses, derive a set of more-usable date/season vars
   
 carbon_wide$yyyy = substring(carbon_wide$from, first=1, last=4)
 carbon_wide$mm = substring(carbon_wide$from, first=6, last=7)
@@ -196,6 +275,10 @@ else if(want_reg_long==1)
 }
 ```
 
+<br>
+
+# Using the Custom Function to Return Data
+
 ``` r
 jan2019 <- carbon(from_dt="2019-01-10T12:00Z", to_dt="2019-01-20T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
 
@@ -225,6 +308,10 @@ dec2019 <- carbon(from_dt="2019-12-10T12:00Z", to_dt="2019-12-20T12:00Z", want_i
 year2019 <-
   bind_rows(jan2019, feb2019, mar2019, apr2019, may2019, jun2019, jul2019, aug2019, sep2019, oct2019, nov2019, dec2019)
 ```
+
+<br>
+
+# Exploratory Data Analysis
 
 ``` r
 mean(year2019$forecast_1)
