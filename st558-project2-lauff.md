@@ -8,8 +8,8 @@ Terry McTest
 This vignette focuses on a custom function that was developed for use in
 conjunction with a particular API (Application Programming Interface) in
 order to query, parse, and return well-structured data. After using said
-function to obtain data, an exploratory data analysis will be performed.
-<br>
+function to obtain data, this vignette presents results from an
+exploratory data analysis. <br>
 
 # The Official Carbon Intensity API for Great Britain
 
@@ -306,6 +306,23 @@ else if(want_reg_long==1)
 
 # Using the Custom Function to Return Data
 
+Given that the focus of the exploratory data analysis to follow is an
+examination of carbon-centric measures over time, we hope to lean on the
+function presented above to create a sort of time-series dataset; that
+is, a collection of measures observed sequentially in time.
+Unfortunately, calls to the CI API are limited to a maximum date range
+of 14 days. As a work-around for this limitation, we will call on the
+`carbon` function multiple times and stack the resulting datasets
+together, in so doing forming a time-series dataset that extends beyond
+the 14 day limit. More specifically, we will call the `carbon` function
+one time for each year \* month combination from January 2019 and
+December 2022 (CI API data is incomplete prior to this window of time).
+In each of these `carbon` calls, we will essentially request a sample of
+that month’s data, i.e. we will request data for the 2nd and 3rd week
+(from the 8th through the 21st) of each year \* month combination. After
+doing so, we will have a dataset comprised of one record per each
+half-hour interval over a course of 4 years.
+
 ``` r
 jan2019 <- carbon(from_dt="2019-01-08T12:00Z", to_dt="2019-01-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
 feb2019 <- carbon(from_dt="2019-02-08T12:00Z", to_dt="2019-02-21T12:00Z", want_int=1, want_gen=1, want_reg_wide=1)
@@ -366,9 +383,35 @@ wide <-
   jan2020, feb2020, mar2020, apr2020, may2020, jun2020, jul2020, aug2020, sep2020, oct2020, nov2020, dec2020,
   jan2021, feb2021, mar2021, apr2021, may2021, jun2021, jul2021, aug2021, sep2021, oct2021, nov2021, dec2021,
   jan2022, feb2022, mar2022, apr2022, may2022, jun2022, jul2022, aug2022, sep2022, oct2022, nov2022, dec2022)
+as_tibble(wide)
 ```
 
+    ## # A tibble: 30,001 × 217
+    ##    from    to    forecast actual index biomass  coal imports   gas nuclear other
+    ##    <chr>   <chr>    <int>  <int> <ord>   <dbl> <dbl>   <dbl> <dbl>   <dbl> <dbl>
+    ##  1 2019-0… 2019…      221    220 mode…     3     3.3     5    41.8    16.1   0.1
+    ##  2 2019-0… 2019…      224    216 mode…     2.5   2.7     5.3  41.9    16.3   0.1
+    ##  3 2019-0… 2019…      219    220 mode…     2.4   2.7     5.4  42.4    16.4   0.1
+    ##  4 2019-0… 2019…      217    221 mode…     2.4   2.8     5.2  42.6    16.5   0.1
+    ##  5 2019-0… 2019…      222    224 mode…     2.5   2.7     5.3  43      16.7   0.1
+    ##  6 2019-0… 2019…      224    232 mode…     2.5   3       6.3  44.1    16.8   0.1
+    ##  7 2019-0… 2019…      227    246 mode…     2.3   3       6.1  46.5    16.8   0.1
+    ##  8 2019-0… 2019…      237    260 high      2.9   3.4     3.7  50      16.8   0.1
+    ##  9 2019-0… 2019…      253    270 high      3.6   4.8     4.6  48.3    16.1   0.1
+    ## 10 2019-0… 2019…      265    271 high      3.3   5       6.1  48.9    15.4   0.1
+    ## # ℹ 29,991 more rows
+    ## # ℹ 206 more variables: hydro <dbl>, solar <dbl>, wind <dbl>, forecast_1 <int>,
+    ## #   forecast_2 <int>, forecast_3 <int>, forecast_4 <int>, forecast_5 <int>,
+    ## #   forecast_6 <int>, forecast_7 <int>, forecast_8 <int>, forecast_9 <int>,
+    ## #   forecast_10 <int>, forecast_11 <int>, forecast_12 <int>, forecast_13 <int>,
+    ## #   forecast_14 <int>, forecast_15 <int>, forecast_16 <int>, forecast_17 <int>,
+    ## #   forecast_18 <int>, index_1 <chr>, index_2 <chr>, index_3 <chr>, …
+
 <br>
+
+Next, we repeat this same process, only this time requesting a long
+dataset (comprised of regional-level data) for the exact same 4-year
+window of time, i.e. from January 2019 through December 2022.
 
 ``` r
 jan2019 <- carbon(from_dt="2019-01-08T12:00Z", to_dt="2019-01-21T12:00Z", want_reg_long=1)
@@ -430,20 +473,50 @@ long <-
   jan2020, feb2020, mar2020, apr2020, may2020, jun2020, jul2020, aug2020, sep2020, oct2020, nov2020, dec2020,
   jan2021, feb2021, mar2021, apr2021, may2021, jun2021, jul2021, aug2021, sep2021, oct2021, nov2021, dec2021,
   jan2022, feb2022, mar2022, apr2022, may2022, jun2022, jul2022, aug2022, sep2022, oct2022, nov2022, dec2022)
+as_tibble(long)
 ```
+
+    ## # A tibble: 540,000 × 21
+    ##    from  to    regionid dnoregion shortname forecast index biomass  coal imports
+    ##    <chr> <chr>    <int> <chr>     <chr>        <int> <ord>   <dbl> <dbl>   <dbl>
+    ##  1 2019… 2019…        1 Scottish… North Sc…       93 low       0     0         0
+    ##  2 2019… 2019…        2 SP Distr… South Sc…       31 very…     1.4   0         0
+    ##  3 2019… 2019…        3 Electric… North We…       72 low       0     0         0
+    ##  4 2019… 2019…        4 NPG Nort… North Ea…       11 very…     9.9   0         0
+    ##  5 2019… 2019…        5 NPG York… Yorkshire      334 high     17.4   7.4       0
+    ##  6 2019… 2019…        6 SP Manweb North Wa…      117 low       0.3   0.1       0
+    ##  7 2019… 2019…        7 WPD Sout… South Wa…      357 high      0     0         0
+    ##  8 2019… 2019…        8 WPD West… West Mid…      242 mode…     2.7   3.1       0
+    ##  9 2019… 2019…        9 WPD East… East Mid…      415 very…     0    18.5       0
+    ## 10 2019… 2019…       10 UKPN East East Eng…      112 low       0     0         0
+    ## # ℹ 539,990 more rows
+    ## # ℹ 11 more variables: gas <dbl>, nuclear <dbl>, other <dbl>, hydro <dbl>,
+    ## #   solar <dbl>, wind <dbl>, yyyy <chr>, mm <chr>, yyyymm <chr>, date <date>,
+    ## #   season <ord>
 
 <br>
 
 # Exploratory Data Analysis
 
+## National-level carbon emissions over time
+
+We begin our exploratory data analysis by plotting the overall actual
+carbon emissions over the 4 year period for which we’ve requested data.
+This plot shows significant variation over micro-time periods
+(e.g. days, weeks), as well as a possible slight decrease in overall
+carbon emissions across the entire 4-year window of interest. As a
+sanity-check of this possible (slight) decrease, we also generate
+year-by-year means of the overall carbon emissions level. More
+sophisticated analytic techniques (and/or data across a longer period of
+time) may support determining whether this potential decrease is truly a
+trend, or more of a “blip on the radar”.
+
 ``` r
-#national, over time
+#national-level emissions, over time
 ggplot(wide, aes(x = date, y = actual)) + geom_line() + geom_smooth() +
 labs(y = "CO2 emissions (in gCO2)",
      title = "CO2 Emissions in Great Britain: 2019-2022")
 ```
-
-    ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
 
     ## Warning: Removed 285 rows containing non-finite values (`stat_smooth()`).
 
@@ -463,44 +536,18 @@ wide %>%
     ## 3 2021         196.
     ## 4 2022         183.
 
-``` r
-#scatterplot, forecast vs. actual
-ggplot(wide, aes(x = forecast, y = actual)) + geom_point() +
-  labs(y = "actual CO2 emissions (in gCO2)", 
-       x = "forecast CO2 emissions (in gCO2)", 
-       title = "Forecast vs. Actual CO2 Emissions (outliers included): 2019-2022")
-```
+<br>
 
-    ## Warning: Removed 285 rows containing missing values (`geom_point()`).
+## Emission levels by season
 
-![](st558-project2-lauff_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
-
-``` r
-no_outliers <- wide %>% filter(forecast < 1000)
-ggplot(no_outliers, aes(x = forecast, y = actual)) + geom_point() +
-labs(y = "actual CO2 emissions (in gCO2)", 
-     x = "forecast CO2 emissions (in gCO2)", 
-     title = "Forecast vs. Actual CO2 Emissions (outliers excluded): 2019-2022")
-```
-
-    ## Warning: Removed 282 rows containing missing values (`geom_point()`).
-
-![](st558-project2-lauff_files/figure-gfm/unnamed-chunk-6-2.png)<!-- -->
+In addition to the continuous carbon emission measure used above, the CI
+API data also includes a categorical emissions index. Here we
+disaggregate said index by the “season” measure which was derived by the
+`carbon` function above; results are presented both as a contingency
+table, and as a bar plot:
 
 ``` r
 #by season
-wide$index <- ordered(wide$index, levels = c("very high", "high", "moderate", "low", "very low"))
-wide$season <- ordered(wide$season, levels = c("spring", "summer", "fall", "winter"))
-#can do the above ordering in the function
-
-ggplot(wide, aes(x=season)) + geom_bar(aes(fill = as.factor(index)), position = "dodge") + 
-  labs(title = "Counts of Daily CO2 Emissions Indices, by Season: 2019-2022") +
-  scale_fill_discrete(name = "Emissions Index")
-```
-
-![](st558-project2-lauff_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
-
-``` r
 table(wide$season, wide$index)
 ```
 
@@ -510,6 +557,23 @@ table(wide$season, wide$index)
     ##   summer         5 3029     3241 1225        0
     ##   fall          10 2509     2880 2100        1
     ##   winter        82 1946     3174 2291        7
+
+``` r
+ggplot(wide, aes(x=season)) + geom_bar(aes(fill = as.factor(index)), position = "dodge") + 
+  labs(title = "Counts of Daily CO2 Emissions Indices, by Season: 2019-2022") +
+  scale_fill_discrete(name = "Emissions Index")
+```
+
+![](st558-project2-lauff_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+<br>
+
+Aside from the fact that “moderate” is the most common emissions level
+in each season of the year, potential patterns are difficult to
+distinguish based on the results above. Here we simplify results even
+further, generating mean carbon emissions level, by season, across all 4
+years of data with which we’re working. These results imply higher
+emissions in the summer, with fall, winter, and spring all being fairly
+similar in terms of average emissions.
 
 ``` r
 wide %>%
@@ -525,17 +589,77 @@ wide %>%
     ## 3 fall    192.
     ## 4 winter  186.
 
+<br>
+
+## Forecasted emissions vs. actual emissions
+
+Next, we use scatterplots to examine the relationship between forecasted
+emission levels and actual emission. The following plot makes painfully
+evident the presence of a small handful of extreme outliers,
+i.e. forecasted values which are well above the range of all other
+values, be they actual or forecasted.
+
+``` r
+#scatterplot, forecast vs. actual
+ggplot(wide, aes(x = forecast, y = actual)) + geom_point() +
+  labs(y = "actual CO2 emissions (in gCO2)", 
+       x = "forecast CO2 emissions (in gCO2)", 
+       title = "Forecast vs. Actual CO2 Emissions (outliers included): 2019-2022")
+```
+
+    ## Warning: Removed 285 rows containing missing values (`geom_point()`).
+
+![](st558-project2-lauff_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+<br>
+
+Here we remove said outliers from the plot; after doing so, we can see a
+strong, positive, near-perfect correlation between forecasted and actual
+emission levels. These results may serve as evidence of an appropriate
+forecasting methodology employed by the National Grid.
+
+``` r
+no_outliers <- wide %>% filter(forecast < 1000)
+ggplot(no_outliers, aes(x = forecast, y = actual)) + geom_point() +
+labs(y = "actual CO2 emissions (in gCO2)", 
+     x = "forecast CO2 emissions (in gCO2)", 
+     title = "Forecast vs. Actual CO2 Emissions (outliers excluded): 2019-2022")
+```
+
+    ## Warning: Removed 282 rows containing missing values (`geom_point()`).
+
+![](st558-project2-lauff_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+<br>
+
+## Emissions over time, by region
+
+As mentioned previously, the CI API provides not only national-level
+emissions data, but regional-level emissions data. Notably, though the
+national-level data includes both forecast and actual emissions, the
+regional-level data includes only the former. Given the strong
+correlation seen in the national-level data (i.e. forecast vs. actual
+emissions), and given the absence of actual emission levels in the
+regional-level data, here we use forecast emissions as a proxy for
+actual emissions when plotting emissions over time.
+
 ``` r
 #over time, by region
 ggplot(long, aes(x = date, y = forecast, color=shortname)) + geom_smooth() +
   labs(y = "forecast CO2 emissions (in gCO2)", 
-       title = "Forecast CO2 Emissions (as a proxy for actual emissions), by Region: 2019-2022") +
+       title = "Forecast CO2 Emissions (as a proxy\nfor actual emissions), by Region: 2019-2022") +
   scale_color_discrete(name = "Region")  
 ```
 
-    ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
+![](st558-project2-lauff_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+<br>
 
-![](st558-project2-lauff_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+The inclusion of 18 distinct regions in the CI API data render the above
+plot nearly un-interpretable. Given this, the following version of the
+above plot is limited to Great Britain’s “primary regions”, that is,
+England, Scotland, and Wales (overall emission levels for Great Britain
+are also plotted for context). In terms of regions, for the 4-year
+period in question, carbon emission levels appear highest in Wales and
+lowest in Scotland (while those in England tend to mirror those of Great
+Britain as a whole).
 
 ``` r
 #limit to principle regions
@@ -551,7 +675,20 @@ ggplot(e_s_w, aes(x = date, y = forecast, color=shortname)) + geom_smooth() +
 
     ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
 
-![](st558-project2-lauff_files/figure-gfm/unnamed-chunk-8-2.png)<!-- -->
+![](st558-project2-lauff_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+<br>
+
+## Association between sources of electricity and CO2 emissions
+
+Next we turn to the “generation mix” data that is included in the CI
+API. These data provide the relative proportions of all electricity that
+is generated by a given source at a given timepoint. Here we generate
+scatterplots showing the relationship between each source of
+electricity, in turn, and the overall emissions level for that same
+timepoint. Not surprisingly, fossil fuels (e.g. gas, coal) appear to
+have a positive relationship with emissions, while renewable energies
+(e.g. wind, solar) appear to have a flat – or even negative –
+relationship with carbon emissions.
 
 ``` r
 #association between source of electricity and CO2 emissions
@@ -562,13 +699,11 @@ ggplot(wide, aes(x = biomass, y = actual, position = "jitter")) +
      title = "Biomass-Generated Electricity vs. CO2 Emissions: 2019-2022")
 ```
 
-    ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
-
     ## Warning: Removed 285 rows containing non-finite values (`stat_smooth()`).
 
     ## Warning: Removed 285 rows containing missing values (`geom_point()`).
 
-![](st558-project2-lauff_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+![](st558-project2-lauff_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
 
 ``` r
 ggplot(wide, aes(x = coal, y = actual, position = "jitter")) + 
@@ -578,12 +713,10 @@ ggplot(wide, aes(x = coal, y = actual, position = "jitter")) +
        title = "Coal-Generated Electricity vs. CO2 Emissions: 2019-2022")
 ```
 
-    ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
-
     ## Warning: Removed 285 rows containing non-finite values (`stat_smooth()`).
     ## Removed 285 rows containing missing values (`geom_point()`).
 
-![](st558-project2-lauff_files/figure-gfm/unnamed-chunk-9-2.png)<!-- -->
+![](st558-project2-lauff_files/figure-gfm/unnamed-chunk-12-2.png)<!-- -->
 
 ``` r
 ggplot(wide, aes(x = imports, y = actual, position = "jitter")) + 
@@ -593,12 +726,10 @@ ggplot(wide, aes(x = imports, y = actual, position = "jitter")) +
        title = "Imported Electricity vs. CO2 Emissions: 2019-2022")
 ```
 
-    ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
-
     ## Warning: Removed 285 rows containing non-finite values (`stat_smooth()`).
     ## Removed 285 rows containing missing values (`geom_point()`).
 
-![](st558-project2-lauff_files/figure-gfm/unnamed-chunk-9-3.png)<!-- -->
+![](st558-project2-lauff_files/figure-gfm/unnamed-chunk-12-3.png)<!-- -->
 
 ``` r
 ggplot(wide, aes(x = gas, y = actual, position = "jitter")) + 
@@ -608,12 +739,10 @@ ggplot(wide, aes(x = gas, y = actual, position = "jitter")) +
        title = "Gas-Generated Electricity vs. CO2 Emissions: 2019-2022")
 ```
 
-    ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
-
     ## Warning: Removed 285 rows containing non-finite values (`stat_smooth()`).
     ## Removed 285 rows containing missing values (`geom_point()`).
 
-![](st558-project2-lauff_files/figure-gfm/unnamed-chunk-9-4.png)<!-- -->
+![](st558-project2-lauff_files/figure-gfm/unnamed-chunk-12-4.png)<!-- -->
 
 ``` r
 ggplot(wide, aes(x = nuclear, y = actual, position = "jitter")) + 
@@ -623,12 +752,10 @@ ggplot(wide, aes(x = nuclear, y = actual, position = "jitter")) +
        title = "Nuclear-Generated Electricity vs. CO2 Emissions: 2019-2022")
 ```
 
-    ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
-
     ## Warning: Removed 285 rows containing non-finite values (`stat_smooth()`).
     ## Removed 285 rows containing missing values (`geom_point()`).
 
-![](st558-project2-lauff_files/figure-gfm/unnamed-chunk-9-5.png)<!-- -->
+![](st558-project2-lauff_files/figure-gfm/unnamed-chunk-12-5.png)<!-- -->
 
 ``` r
 ggplot(wide, aes(x = hydro, y = actual, position = "jitter")) + 
@@ -638,12 +765,10 @@ ggplot(wide, aes(x = hydro, y = actual, position = "jitter")) +
        title = "Hydro-Generated Electricity vs. CO2 Emissions: 2019-2022")
 ```
 
-    ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
-
     ## Warning: Removed 285 rows containing non-finite values (`stat_smooth()`).
     ## Removed 285 rows containing missing values (`geom_point()`).
 
-![](st558-project2-lauff_files/figure-gfm/unnamed-chunk-9-6.png)<!-- -->
+![](st558-project2-lauff_files/figure-gfm/unnamed-chunk-12-6.png)<!-- -->
 
 ``` r
 ggplot(wide, aes(x = solar, y = actual, position = "jitter")) + 
@@ -653,12 +778,10 @@ ggplot(wide, aes(x = solar, y = actual, position = "jitter")) +
        title = "Solar-Generated Electricity vs. CO2 Emissions: 2019-2022")
 ```
 
-    ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
-
     ## Warning: Removed 285 rows containing non-finite values (`stat_smooth()`).
     ## Removed 285 rows containing missing values (`geom_point()`).
 
-![](st558-project2-lauff_files/figure-gfm/unnamed-chunk-9-7.png)<!-- -->
+![](st558-project2-lauff_files/figure-gfm/unnamed-chunk-12-7.png)<!-- -->
 
 ``` r
 ggplot(wide, aes(x = wind, y = actual, position = "jitter")) + 
@@ -668,12 +791,24 @@ ggplot(wide, aes(x = wind, y = actual, position = "jitter")) +
        title = "Wind-Generated Electricity vs. CO2 Emissions: 2019-2022")
 ```
 
-    ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
-
     ## Warning: Removed 285 rows containing non-finite values (`stat_smooth()`).
     ## Removed 285 rows containing missing values (`geom_point()`).
 
-![](st558-project2-lauff_files/figure-gfm/unnamed-chunk-9-8.png)<!-- -->
+![](st558-project2-lauff_files/figure-gfm/unnamed-chunk-12-8.png)<!-- -->
+<br>
+
+## Generation mix
+
+Given the differing relationships between electricity source and carbon
+emissions, the relative proportion of each source may also be of
+interest. The following plot shows year-by-year averages of the
+proportion of all electricity that is generated by each source.
+Unfortunately, the electricity source which is most prevalently used
+across all 4 years of interest (i.e. gas) is one which has a positive
+relationship with emissions (see also previous section); that being
+said, the second most prevalent source (wind) appears to be one which is
+both (1) negatively associated with emissions, and (2) increasing in use
+over the period in question.
 
 ``` r
 # generation mix
@@ -701,36 +836,24 @@ ggplot(by_year, aes(x=yyyy, group=1)) +
   geom_line(aes(y=wind, color="wind")) +
   geom_line(aes(y=other, color="other")) +
   scale_color_discrete(name = "generation source") +
-  labs(y = "Percentage",
+  labs(y = "Percentage", x = "Year",
     title = "Percentage of Total Electricity Generated, by Source (yearly averages)")
 ```
 
-![](st558-project2-lauff_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+![](st558-project2-lauff_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+<br>
 
-``` r
-ggplot(wide, aes(x=date)) +
-  geom_smooth(aes(y=biomass, color="biomass")) +
-  geom_smooth(aes(y=coal, color="coal")) +
-  geom_smooth(aes(y=imports, color="imports")) +
-  geom_smooth(aes(y=gas, color="gas")) +
-  geom_smooth(aes(y=nuclear, color="nuclear")) +
-  geom_smooth(aes(y=hydro, color="hydro")) +
-  geom_smooth(aes(y=solar, color="solar")) +
-  geom_smooth(aes(y=wind, color="wind")) +
-  geom_smooth(aes(y=other, color="other"))
-```
-
-    ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
-    ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
-    ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
-    ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
-    ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
-    ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
-    ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
-    ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
-    ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
-
-![](st558-project2-lauff_files/figure-gfm/unnamed-chunk-10-2.png)<!-- -->
+Lastly, we present a “radar plot” showing the electricity generation-mix
+of each region relative to the corresponding mix in other regions. For
+the sake of improving the digestibility of results, we have again
+limited to data to the three primary regions of Great Britain
+(i.e. England, Scotland, and Wales); overall results for Great Britain
+are also included for context. Here we see that, relative to other
+regions, a greater proportion of Scotland’s electricity is wind-,
+hydro-, or nuclear-generated (not surprisingly, Scotland’s emission
+levels are lower relative to other regions). England leans relatively
+more heavily on solar, biomass, coal, and imports, while Wales leans
+relatively more on natural gas.
 
 ``` r
 #radar plot of generation mix by region
@@ -753,14 +876,21 @@ reg_radar <-
   ungroup() %>%
   mutate_at(vars(-shortname), rescale)
 
-ggradar(reg_radar) + labs(title = "Radar Plot of Electricity-Generation Mix, by Region") 
+ggradar(reg_radar) + labs(title = "Radar Plot of\nElectricity-Generation Mix,\nby Region") 
 ```
 
-![](st558-project2-lauff_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+![](st558-project2-lauff_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
 
 ``` r
   #above code is based on https://r-graph-gallery.com/web-radar-chart-with-R.html
 ```
+
+<br>
+
+Note that the values in the above radar plot show relative values as
+opposed to actual proportions. As context for the above radar plot, here
+we provide the underlying (unscaled) proportions of electricity that are
+generated by each source in each of the primary regions:
 
 ``` r
 #actual (i.e. un-scaled) proportions underlying the radar plot
